@@ -35,7 +35,7 @@ class Navbar extends Component {
 
 	render() {
 		return (
-			<nav className="menu">
+			<nav className="menu mb-5">
 				<div className="menu__logo">
 					<Row type="flex" align="middle">
 						<Col span={6}>
