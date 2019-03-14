@@ -34,6 +34,7 @@ class Navbar extends Component {
 	};
 
 	render() {
+		const { userInfo } = this.props;
 		return (
 			<nav className="menu mb-5">
 				<div className="menu__logo">
@@ -69,7 +70,7 @@ class Navbar extends Component {
 						visible={this.state.visible}
 					>
 						<LeftMenu mode="inline" />
-						<RightMenu mode="inline" />
+						<RightMenu mode="inline" userInfo={userInfo} />
 					</Drawer>
 				</div>
 			</nav>

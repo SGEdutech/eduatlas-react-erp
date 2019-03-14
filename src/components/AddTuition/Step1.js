@@ -17,20 +17,20 @@ const colLayout = {
 };
 
 const children = [
-	<Option value="Library/Study Area">Library/Study Area</Option>,
-	<Option value="Smart Classes">Smart Classes</Option>,
-	<Option value="Study Material">Study Material</Option>,
-	<Option value="AC Classes">AC Classes</Option>,
-	<Option value="Internet/WIFI">Internet/WIFI</Option>,
-	<Option value="Transport">Transport</Option>,
-	<Option value="E-Learning">E-Learning</Option>
+	<Option key="1" value="Library/Study Area">Library/Study Area</Option>,
+	<Option key="2" value="Smart Classes">Smart Classes</Option>,
+	<Option key="3" value="Study Material">Study Material</Option>,
+	<Option key="4" value="AC Classes">AC Classes</Option>,
+	<Option key="5" value="Internet/WIFI">Internet/WIFI</Option>,
+	<Option key="6" value="Transport">Transport</Option>,
+	<Option key="7" value="E-Learning">E-Learning</Option>
 ];
 
 class Step1 extends Component {
 	render() {
-		const { getFieldDecorator } = this.props.form;
+		const { getFieldDecorator } = this.props;
 		return (
-			<Form onSubmit={this.handleSubmit} className="pt-3">
+			<>
 				<Row gutter={16}>
 					<Col {...colLayout}>
 						<Form.Item
@@ -145,10 +145,10 @@ class Step1 extends Component {
 						</Form.Item>
 					</Col>
 				</Row>
-			</Form>
+			</>
 		);
 	}
 }
 
-export default Form.create({ name: 'add-tuition' })(Step1);
+export default Step1;
 
