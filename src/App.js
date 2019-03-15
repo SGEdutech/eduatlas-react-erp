@@ -42,7 +42,7 @@ class App extends Component {
 			<>
 				<Router>
 					<>
-						<Navbar userInfo={userInfo} />
+						<Navbar userInfo={userInfo} updateUserInfo={this.updateUserInfo} />
 						<Switch>
 							<Route exact path="/" render={() => <Loading userInfo={userInfo} />}></Route>
 							<Route exact path="/dashboard" component={ErpManager}></Route>

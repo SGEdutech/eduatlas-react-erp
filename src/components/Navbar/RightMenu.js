@@ -13,12 +13,14 @@ const SubMenu = Menu.SubMenu;
 
 class RightMenu extends Component {
 	handleLogoutClick = async () => {
+		const { history: { replace }, updateUserInfo } = this.props;
 		const hideLoadingMessage = message.loading('Action in progress..', 0);
 		try {
-			const { data } = axios.post(`${host}/auth/local/logout`, {}, { withCredentials: true });
-			console.log(data);
+			axios.post(`${host}/auth/local/logout`, {}, { withCredentials: true });
 			hideLoadingMessage();
 			message.success('Log out successful!');
+			updateUserInfo({});
+			setTimeout(() => replace('/'), 100);
 		} catch (error) {
 			hideLoadingMessage();
 			message.error('Log out unsuccessful!');
@@ -26,8 +28,8 @@ class RightMenu extends Component {
 	}
 
 	render() {
-		const { userInfo } = this.props;
-		const userMenuItemsJsx = userInfo === null || userInfo === undefined || Object.keys(userInfo).length === 0 ? (
+		const { mode, userInfo } = this.props;
+		const userMenuItemsJsx = userInfo === null || Object.keys(userInfo).length === 0 ? (
 			<SubMenu title={<span><Icon style={{ fontSize: 20 }} type="user" /></span>}>
 				<Menu.Item key="setting:1"><Link to="/login">Login</Link></Menu.Item>
 			</SubMenu>
@@ -40,7 +42,7 @@ class RightMenu extends Component {
 			);
 
 		return (
-			<Menu mode={this.props.mode}>
+			<Menu mode={mode}>
 				{userMenuItemsJsx}
 			</Menu>
 		);

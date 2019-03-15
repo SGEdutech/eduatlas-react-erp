@@ -1,3 +1,4 @@
+// FIXME: Extreamly bad code quality
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -20,20 +21,12 @@ class Navbar extends Component {
 		visible: false
 	};
 
-	showDrawer = () => {
-		this.setState({
-			visible: true
-		});
-	};
+	showDrawer = () => this.setState({ visible: true });
 
-	onClose = () => {
-		this.setState({
-			visible: false
-		});
-	};
+	onClose = () => this.setState({	visible: false });
 
 	render() {
-		const { userInfo } = this.props;
+		const { updateUserInfo, userInfo } = this.props;
 		return (
 			<nav className="menu mb-5">
 				<div className="menu__logo">
@@ -51,13 +44,12 @@ class Navbar extends Component {
 						<LeftMenu mode="horizontal" />
 					</div>
 					<div className="menu_rigth">
-						<RightMenu mode="horizontal" />
+						<RightMenu mode="horizontal" updateUserInfo={updateUserInfo} userInfo={userInfo} />
 					</div>
 					<Button
 						className="menu__mobile-button"
 						type="primary"
-						onClick={this.showDrawer}
-					>
+						onClick={this.showDrawer}>
 						<Icon type="align-right" />
 					</Button>
 					<Drawer
@@ -68,7 +60,7 @@ class Navbar extends Component {
 						onClose={this.onClose}
 						visible={this.state.visible}>
 						<LeftMenu mode="inline" />
-						<RightMenu mode="inline" userInfo={userInfo} />
+						<RightMenu mode="inline" updateUserInfo={updateUserInfo} userInfo={userInfo} />
 					</Drawer>
 				</div>
 			</nav>
