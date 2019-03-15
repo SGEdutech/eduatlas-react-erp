@@ -15,34 +15,6 @@ import {
 } from 'antd';
 const { Meta } = Card;
 
-
-const data = [
-	{
-		title: 'PV EDUCATION PVT. LTD.',
-		rating: 2.5
-	},
-	{
-		title: 'THE BRAIN LAB',
-		rating: 5,
-		url: 'https://eduatlas.com/images/tuitionPics/brainLab-1545988442793.PNG'
-	},
-	{
-		title: 'Aba Academy',
-		rating: 5
-	},
-	{
-		title: 'MEEND MURCHHANA MUSIC INSTITUTE',
-		rating: 5
-	},
-	{
-		title: 'WINDOWS THE ART AND CRAFT CORNER',
-		rating: 2
-	},
-	{
-		addNewTuition: true
-	}
-];
-
 const gridConfig = {
 	gutter: 16, xs: 1, md: 2, lg: 3, xl: 4, xxl: 5
 };
@@ -64,10 +36,23 @@ class TuitionCards extends Component {
 		claimedTuitions: []
 	}
 
+	calcualteAndInsertRatingInTuitions = institutes => {
+		institutes = institutes.map(institute => {
+			let sumOfRatings = 0;
+			institute.reviews.forEach(review => {
+				sumOfRatings += review.rating;
+			});
+			const finalRating = institute.reviews.length === 0 ? 2.5 : Math.round(sumOfRatings / institute.reviews.length);
+			institute.rating = finalRating;
+			return institute;
+		});
+	}
+
 	async componentDidMount() {
 		const { data } = await axios.get(`${host}/tuition/claimed`, { withCredentials: true });
-		this.setState({ claimedTuitions: data })
-		console.log(data)
+		this.calcualteAndInsertRatingInTuitions(data);
+		this.setState({ claimedTuitions: [...data, { addNewTuition: true }] });
+
 	}
 
 	handleCardClick = title => {
@@ -82,21 +67,21 @@ class TuitionCards extends Component {
 	handleTuitionManageCancel = () => this.setState({ showTuitionManageModal: false })
 
 	render() {
-		const { showAddTuitionModal, showTuitionManageModal, tuitionName } = this.state;
+		const { claimedTuitions, showAddTuitionModal, showTuitionManageModal, tuitionName } = this.state;
 		return (
 			<>
 				<List
 					grid={gridConfig}
-					dataSource={data}
+					dataSource={claimedTuitions}
 					renderItem={item => (
 						Boolean(item.addNewTuition) === false ?
 							<List.Item>
 								<Card
 									hoverable
-									onClick={() => this.handleCardClick(item.title)}>
+									onClick={() => this.handleCardClick(item.name)}>
 									<Meta
-										avatar={<Avatar src={item.url} style={{ backgroundColor: '#00bcd4' }}>{item.title.substr(0, 1)}</Avatar>}
-										title={item.title}
+										avatar={<Avatar src={item.img_tuitionCoverPic} style={{ backgroundColor: '#00bcd4' }}>{item.name.substr(0, 1)}</Avatar>}
+										title={item.name}
 										description={
 											<Tag color={getRatingColor(item.rating)}>{item.rating}/5</Tag>
 										}
