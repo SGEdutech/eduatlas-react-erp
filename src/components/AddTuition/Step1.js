@@ -28,7 +28,8 @@ const children = [
 
 class Step1 extends Component {
 	render() {
-		const { getFieldDecorator } = this.props;
+		const { getFieldDecorator, tuitionInfo } = this.props;
+		console.log(tuitionInfo);
 		return (
 			<>
 				<Row gutter={16}>
@@ -37,7 +38,7 @@ class Step1 extends Component {
 							label="Institute Name"
 							hasFeedback={true}>
 							{getFieldDecorator('name', {
-								// initialValue: code,
+								initialValue: tuitionInfo.name,
 								rules: [{
 									required: true, message: 'Name is required!'
 								}, {
@@ -53,7 +54,7 @@ class Step1 extends Component {
 							label="City"
 							hasFeedback={true}>
 							{getFieldDecorator('city', {
-								// initialValue: code,
+								initialValue: tuitionInfo.city,
 								rules: [{
 									required: true, message: 'City is required!'
 								}]
@@ -67,7 +68,7 @@ class Step1 extends Component {
 							label="State"
 							hasFeedback={true}>
 							{getFieldDecorator('state', {
-								// initialValue: code,
+								initialValue: tuitionInfo.state,
 								rules: [{
 									required: true, message: 'State is required!'
 								}]
@@ -81,7 +82,7 @@ class Step1 extends Component {
 							label="Address Line 1"
 							hasFeedback={true}>
 							{getFieldDecorator('addressLine1', {
-								// initialValue: code,
+								initialValue: tuitionInfo.addressLine1,
 								rules: [{
 									required: true, message: 'AL1 is required!'
 								}]
@@ -95,7 +96,7 @@ class Step1 extends Component {
 							label="Address Line 2"
 							hasFeedback={true}>
 							{getFieldDecorator('addressLine2', {
-								// initialValue: code,
+								initialValue: tuitionInfo.addressLine2
 							})(
 								<Input />
 							)}
@@ -106,7 +107,7 @@ class Step1 extends Component {
 							label="Pin Code"
 							hasFeedback={true}>
 							{getFieldDecorator('pin', {
-								// initialValue: code,
+								initialValue: tuitionInfo.pin
 							})(
 								<InputNumber className="w-100" />
 							)}
@@ -119,7 +120,7 @@ class Step1 extends Component {
 							label="About Your Institute"
 							hasFeedback={true}>
 							{getFieldDecorator('description', {
-								// initialValue: code,
+								initialValue: tuitionInfo.description
 							})(
 								<TextArea rows={4} />
 							)}
@@ -132,13 +133,12 @@ class Step1 extends Component {
 							label="Facilities"
 							hasFeedback={true}>
 							{getFieldDecorator('facilities', {
-								// initialValue: code,
+								initialValue: tuitionInfo.facilities
 							})(
 								<Select
 									mode="tags"
 									style={{ width: '100%' }}
-									placeholder="Tags Mode"
-								>
+									placeholder="Tags Mode">
 									{children}
 								</Select>
 							)}

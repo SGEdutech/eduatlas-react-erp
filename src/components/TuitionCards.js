@@ -32,7 +32,8 @@ class TuitionCards extends Component {
 	state = {
 		showAddTuitionModal: false,
 		showTuitionManageModal: false,
-		tuitionName: null,
+		// TODO: Pull this to variable
+		tuitionInfo: { name: null, _id: null },
 		claimedTuitions: []
 	}
 
@@ -54,19 +55,19 @@ class TuitionCards extends Component {
 		this.setState({ claimedTuitions: [...data, { addNewTuition: true }] });
 	}
 
-	handleCardClick = title => {
+	handleCardClick = ({ _id, name }) => {
 		this.setState({
-			tuitionName: title,
+			tuitionInfo: { _id, name },
 			showTuitionManageModal: true
 		});
 	}
 
-	handleTuitionAddClick = () => this.setState({ showAddTuitionModal: true })
 	handleAddTuitionCancel = () => this.setState({ showAddTuitionModal: false })
+	handleTuitionAddClick = () => this.setState({ showAddTuitionModal: true })
 	handleTuitionManageCancel = () => this.setState({ showTuitionManageModal: false })
 
 	render() {
-		const { claimedTuitions, showAddTuitionModal, showTuitionManageModal, tuitionName } = this.state;
+		const { claimedTuitions, showAddTuitionModal, showTuitionManageModal, tuitionInfo } = this.state;
 		return (
 			<>
 				<List
@@ -77,9 +78,9 @@ class TuitionCards extends Component {
 							<List.Item>
 								<Card
 									hoverable
-									onClick={() => this.handleCardClick(item.name)}>
+									onClick={() => this.handleCardClick(item)}>
 									<Meta
-										avatar={<Avatar src={item.img_tuitionCoverPic} style={{ backgroundColor: '#00bcd4' }}>{item.name.substr(0, 1)}</Avatar>}
+										avatar={<Avatar src={item.img_tuitionCoverPic} style={{ backgroundColor: '#00bcd4' }}>{item.name.substr(0, 1).toUpperCase()}</Avatar>}
 										title={item.name}
 										description={
 											<Tag color={getRatingColor(item.rating)}>{item.rating}/5</Tag>
@@ -107,13 +108,12 @@ class TuitionCards extends Component {
 					centered
 					footer={null}
 					onCancel={this.handleTuitionManageCancel}
-					title={tuitionName}
-					visible={showTuitionManageModal}
-				>
+					title={tuitionInfo.name}
+					visible={showTuitionManageModal}>
 					<div className="text-center">
 						<Button block className="my-2" icon="tool" size="large" type="primary">Study Monitor</Button><br />
 						<Button block className="my-2" icon="eye" size="large" type="primary">View Listing</Button><br />
-						<Button block className="my-2" icon="edit" size="large" type="primary">Edit Listing </Button><br />
+						<Link to={`/edit-tuition/${tuitionInfo._id}`}><Button block className="my-2" icon="edit" size="large" type="primary">Edit Listing</Button></Link><br />
 						<Button block className="my-2" icon="delete" size="large" type="danger">Unclaim</Button>
 					</div>
 				</Modal>
@@ -123,8 +123,7 @@ class TuitionCards extends Component {
 					closable={false}
 					footer={null}
 					onCancel={this.handleAddTuitionCancel}
-					visible={showAddTuitionModal}
-				>
+					visible={showAddTuitionModal}>
 					<div className="text-center">
 						<a href="https://eduatlas.com"><Button block className="my-2" icon="search" size="large" type="primary">Find & Claim A Listing</Button></a><br />
 						<Link to="/add-tuition"><Button block className="my-2" icon="plus" onClick={this.handleAddTuitionClick} size="large" type="primary">Add New </Button></Link>

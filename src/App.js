@@ -9,7 +9,7 @@ import './App.css';
 import './core/css/material-kit.css';
 
 // Components
-import AddTuition from './components/AddTuition';
+import AddOrEditTuition from './components/AddOrEditTuition';
 import ErpManager from './components/ErpManager';
 import Loading from './components/Loading';
 import Login from './components/Login';
@@ -46,9 +46,10 @@ class App extends Component {
 						<Switch>
 							<Route exact path="/" render={() => <Loading userInfo={userInfo} />}></Route>
 							<Route exact path="/dashboard" component={ErpManager}></Route>
-							<Route exact path="/add-tuition" component={AddTuition}></Route>
+							<Route exact path="/add-tuition" component={AddOrEditTuition}></Route>
 							<Route exact path="/login" render={() => <Login updateUserInfo={this.updateUserInfo} />}></Route>
 							<Route exact path="/signup" component={Signup}></Route>
+							<Route exact path="/edit-tuition/:tuitionId" render={() => <AddOrEditTuition edit={true} />}></Route>
 						</Switch>
 					</>
 				</Router>
