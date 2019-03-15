@@ -1,17 +1,20 @@
+import axios from 'axios';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+
+import { host } from '../config.json';
 
 import {
 	Avatar,
 	Button,
 	Card,
-	Icon,
 	List,
 	Modal,
 	Row,
 	Tag
 } from 'antd';
 const { Meta } = Card;
+
 
 const data = [
 	{
@@ -58,6 +61,11 @@ class TuitionCards extends Component {
 		showAddTuitionModal: false,
 		showTuitionManageModal: false,
 		tuitionName: null
+	}
+
+	async componentDidMount() {
+		const { data } = await axios.get(`${host}/tuition/claimed`, { withCredentials: true });
+		console.log(data);
 	}
 
 	handleCardClick = title => {

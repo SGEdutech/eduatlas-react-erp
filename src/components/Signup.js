@@ -174,7 +174,7 @@ class Signup extends Component {
 						</Col>
 						<Col {...colLayout} className="mb-3">
 							<Row type="flex" justify="center">
-								<Link to="/"> Login!</Link>
+								<Link to="/login"> Login!</Link>
 							</Row>
 						</Col>
 					</Row>

@@ -1,5 +1,5 @@
-
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 import {
 	Icon,
@@ -13,7 +13,7 @@ class RightMenu extends Component {
 
 		const userMenuItemsJsx = Boolean(userInfo) === false ?
 			<SubMenu title={<span><Icon style={{ fontSize: 20 }} type="user" /></span>}>
-				<Menu.Item key="setting:1">Login</Menu.Item>
+				<Menu.Item key="setting:1"><Link to="/login">Login</Link></Menu.Item>
 			</SubMenu> :
 			<SubMenu title={<span><Icon style={{ fontSize: 20 }} type="user" />{userInfo.name.substr(0, 16)}</span>}>
 				<Menu.Item key="setting:1">Dashboard</Menu.Item>

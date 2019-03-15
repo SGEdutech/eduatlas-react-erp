@@ -32,10 +32,23 @@ const colLayout = {
 };
 
 class Login extends Component {
+	login = async values => {
+		const hideLoadingMessage = message.loading('Action in progress..', 0);
+		try {
+			const { data: userInfo } = await axios.post(`${host}/auth/local/login`, values);
+			hideLoadingMessage();
+			message.success('Log-In successful!');
+			console.log(userInfo);
+			return;
+		} catch (error) {
+			hideLoadingMessage();
+			message.error('There was a problem Logging-In!');
+			return new Promise((resolve, reject) => reject());
+		}
+	}
+
 	handleSubmit = e => {
 		e.preventDefault();
-		const hideLoadingMessage = message.loading('Action in progress..', 0);
-
 		const { form, history: { push } } = this.props;
 		form.validateFieldsAndScroll(async (err, values) => {
 			if (err) {
@@ -44,24 +57,11 @@ class Login extends Component {
 			}
 			try {
 				this.login(values);
-				hideLoadingMessage();
-				message.success('Log-In successful!');
 				push('/');
 			} catch (error) {
-				hideLoadingMessage();
-				message.error('There was a problem Logging-In!');
+				console.error(error);
 			}
 		});
-	}
-
-	login = async values => {
-		try {
-			await axios.post(host + '/auth/local/login', values);
-			return true;
-		} catch (error) {
-			console.error(error);
-			return new Promise((resolve, reject) => reject(false));
-		}
 	}
 
 	render() {
@@ -113,7 +113,7 @@ class Login extends Component {
 						</Col>
 						<Col {...colLayout} className="mb-3">
 							<Row type="flex" justify="center">
-								<Link to="/sign-up"> Sign-Up!</Link>
+								<Link to="/signup"> Sign-Up!</Link>
 							</Row>
 						</Col>
 					</Row>
