@@ -47,7 +47,7 @@ class App extends Component {
 							<Route exact path="/" render={() => <Loading userInfo={userInfo} />}></Route>
 							<Route exact path="/dashboard" component={ErpManager}></Route>
 							<Route exact path="/add-tuition" component={AddTuition}></Route>
-							<Route exact path="/login" component={Login}></Route>
+							<Route exact path="/login" render={() => <Login updateUserInfo={this.updateUserInfo} />}></Route>
 							<Route exact path="/signup" component={Signup}></Route>
 						</Switch>
 					</>

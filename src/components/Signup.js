@@ -40,8 +40,7 @@ class Signup extends Component {
 	handleSubmit = e => {
 		e.preventDefault();
 		const hideLoadingMessage = message.loading('Action in progress..', 0);
-
-		const { form, history: { push } } = this.props;
+		const { form, history: { replace } } = this.props;
 		form.validateFieldsAndScroll(async (err, values) => {
 			if (err) {
 				console.error(err);
@@ -50,11 +49,11 @@ class Signup extends Component {
 			try {
 				await this.signUp(values);
 				hideLoadingMessage();
-				message.success('Sign-Up successful! You can Log-In now');
-				push('/');
+				message.success('Sign-Up successful! Please log in now');
+				replace('/login');
 			} catch (error) {
 				hideLoadingMessage();
-				message.error('There was a problem Signing-Up!');
+				message.error('There was a problem signing up!');
 			}
 		});
 	}

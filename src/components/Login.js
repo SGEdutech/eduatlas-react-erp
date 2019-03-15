@@ -33,14 +33,17 @@ const colLayout = {
 
 class Login extends Component {
 	login = async values => {
+		const { updateUserInfo, history: { replace } } = this.props;
 		const hideLoadingMessage = message.loading('Action in progress..', 0);
 		try {
 			const { data: userInfo } = await axios.post(`${host}/auth/local/login`, values, { withCredentials: true });
 			hideLoadingMessage();
 			message.success('Log-In successful!');
-			console.log(userInfo);
-			return;
+			updateUserInfo(userInfo);
+			// FIXME
+			setTimeout(() => replace('/'), 100);
 		} catch (error) {
+			console.error(error)
 			hideLoadingMessage();
 			message.error('There was a problem Logging-In!');
 			return new Promise((__, reject) => reject());
