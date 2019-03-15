@@ -34,12 +34,12 @@ class RightMenu extends Component {
 				<Menu.Item key="setting:1"><Link to="/login">Login</Link></Menu.Item>
 			</SubMenu>
 		) : (
-				<SubMenu title={<span><Icon style={{ fontSize: 20 }} type="user" />{userInfo.firstName.substr(0, 16)}</span>}>
-					<Menu.Item key="setting:1">Dashboard</Menu.Item>
-					<Menu.Item key="setting:2">Switch Role</Menu.Item>
-					<Menu.Item key="setting:3" onClick={this.handleLogoutClick}>Logout</Menu.Item>
-				</SubMenu>
-			);
+			<SubMenu title={<span><Icon style={{ fontSize: 20 }} type="user" />{userInfo.firstName.substr(0, 16)}</span>}>
+				<Menu.Item key="setting:1"><Link to="/dashboard">Dashboard</Link></Menu.Item>
+				<Menu.Item key="setting:2"><a href={host + '/User-dashboard.html'} target='_blank' rel="noopener noreferrer">Switch Role</a></Menu.Item>
+				<Menu.Item key="setting:3" onClick={this.handleLogoutClick}>Logout</Menu.Item>
+			</SubMenu>
+		);
 
 		return (
 			<Menu mode={mode}>

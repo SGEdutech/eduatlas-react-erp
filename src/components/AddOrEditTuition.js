@@ -46,7 +46,7 @@ class AddTuition extends Component {
 			const { data: tuitionInfo } = await axios.put(`${host}/tuition/${tuitionId}`, values);
 			this.setState({ tuitionInfo });
 			hideLoadingMessage();
-			message.success('Tuition added successfully!');
+			message.success('Tuition edited successfully!');
 			push('/dashboard');
 		} catch (error) {
 			console.error(error);

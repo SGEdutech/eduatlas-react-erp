@@ -9,7 +9,9 @@ import {
 	Button,
 	Card,
 	List,
+	message,
 	Modal,
+	Popconfirm,
 	Row,
 	Tag
 } from 'antd';
@@ -22,7 +24,8 @@ const gridConfig = {
 function getRatingColor(rating) {
 	if (rating >= 4) {
 		return 'green';
-	} else if (rating > 2) {
+	}
+	if (rating > 2) {
 		return 'orange';
 	}
 	return 'red';
@@ -63,8 +66,28 @@ class TuitionCards extends Component {
 	}
 
 	handleAddTuitionCancel = () => this.setState({ showAddTuitionModal: false })
+
 	handleTuitionAddClick = () => this.setState({ showAddTuitionModal: true })
+
 	handleTuitionManageCancel = () => this.setState({ showTuitionManageModal: false })
+
+	removeClaimedListingFrom = listingId => this.setState(prevState => ({ claimedTuitions: prevState.claimedTuitions.filter(tuition => tuition._id !== listingId) }));
+
+	handleUnclaimBtnClick = async () => {
+		const { tuitionInfo: { _id: listingId } } = this.state;
+		const hideLoadingMessage = message.loading('Action in progress..', 0);
+		try {
+			await axios.delete(`${host}/user/remove-claim`, { data: { listingCategory: 'tuition', listingId }, withCredentials: true });
+			hideLoadingMessage();
+			message.success('Unclaim successful!');
+			this.removeClaimedListingFrom(listingId);
+			this.setState({ showTuitionManageModal: false });
+		} catch (error) {
+			console.error(error);
+			hideLoadingMessage();
+			message.success('There was some problem connecting to server!');
+		}
+	}
 
 	render() {
 		const { claimedTuitions, showAddTuitionModal, showTuitionManageModal, tuitionInfo } = this.state;
@@ -111,10 +134,18 @@ class TuitionCards extends Component {
 					title={tuitionInfo.name}
 					visible={showTuitionManageModal}>
 					<div className="text-center">
-						<Button block className="my-2" icon="tool" size="large" type="primary">Study Monitor</Button><br />
-						<Button block className="my-2" icon="eye" size="large" type="primary">View Listing</Button><br />
+						<a href={host + '/app/' + tuitionInfo._id} target='_blank' rel="noopener noreferrer">
+							<Button block className="my-2" icon="tool" size="large" type="primary">Study Monitor</Button><br />
+						</a>
+						<a href={host + '/TuitionDetails2.0.html?_id=' + tuitionInfo._id} target='_blank' rel="noopener noreferrer">
+							<Button block className="my-2" icon="eye" size="large" type="primary">View Listing</Button>
+						</a><br />
 						<Link to={`/edit-tuition/${tuitionInfo._id}`}><Button block className="my-2" icon="edit" size="large" type="primary">Edit Listing</Button></Link><br />
-						<Button block className="my-2" icon="delete" size="large" type="danger">Unclaim</Button>
+						<Popconfirm title="Are you sure ?" onConfirm={this.handleUnclaimBtnClick} okText="Yes" cancelText="No">
+							<Button block className="my-2" icon="delete" size="large" type="danger">
+								Unclaim
+							</Button>
+						</Popconfirm>
 					</div>
 				</Modal>
 				{/* Add Tuition Modal */}
@@ -125,8 +156,12 @@ class TuitionCards extends Component {
 					onCancel={this.handleAddTuitionCancel}
 					visible={showAddTuitionModal}>
 					<div className="text-center">
-						<a href="https://eduatlas.com"><Button block className="my-2" icon="search" size="large" type="primary">Find & Claim A Listing</Button></a><br />
-						<Link to="/add-tuition"><Button block className="my-2" icon="plus" onClick={this.handleAddTuitionClick} size="large" type="primary">Add New </Button></Link>
+						<a href={host + '/'} target='_blank' rel="noopener noreferrer">
+							<Button block className="my-2" icon="search" size="large" type="primary">Find & Claim A Listing</Button>
+						</a><br />
+						<Link to="/add-tuition">
+							<Button block className="my-2" icon="plus" onClick={this.handleAddTuitionClick} size="large" type="primary">Add New </Button>
+						</Link>
 					</div>
 				</Modal>
 			</>
