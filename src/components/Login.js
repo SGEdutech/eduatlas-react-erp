@@ -35,7 +35,7 @@ class Login extends Component {
 	login = async values => {
 		const hideLoadingMessage = message.loading('Action in progress..', 0);
 		try {
-			const { data: userInfo } = await axios.post(`${host}/auth/local/login`, values);
+			const { data: userInfo } = await axios.post(`${host}/auth/local/login`, values, { withCredentials: true });
 			hideLoadingMessage();
 			message.success('Log-In successful!');
 			console.log(userInfo);
@@ -43,7 +43,7 @@ class Login extends Component {
 		} catch (error) {
 			hideLoadingMessage();
 			message.error('There was a problem Logging-In!');
-			return new Promise((resolve, reject) => reject());
+			return new Promise((__, reject) => reject());
 		}
 	}
 

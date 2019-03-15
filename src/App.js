@@ -22,7 +22,7 @@ import { host } from './config.json';
 
 class App extends Component {
 	state = {
-		userInfo: {}
+		userInfo: null
 	}
 
 	async componentDidMount() {
@@ -38,6 +38,7 @@ class App extends Component {
 
 	render() {
 		const { userInfo } = this.state;
+		console.log(userInfo);
 		return (
 			<>
 				<Router>
