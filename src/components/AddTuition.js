@@ -1,8 +1,12 @@
+import axios from 'axios';
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 
 import Step1 from '../components/AddTuition/Step1';
 
 import sanatizeFormObj from '../scripts/sanatize-form-obj';
+
+import { host } from '../config.json';
 
 import {
 	Button,
@@ -19,27 +23,33 @@ class AddTuition extends Component {
 	}
 
 	handleDoneClick = () => {
-		const wasSuccessful = this.handleSubmit();
+		const wasSuccessful = this.handleFormSubmit();
 		if (wasSuccessful) {
 			console.log('redirect');
 		}
 	}
 
-	handleSubmit = () => {
-		const { form } = this.props;
-		let isFormValid = null;
-		form.validateFieldsAndScroll((err, values) => {
+	handleFormSubmit = () => {
+		const { form, history: { push } } = this.props;
+		form.validateFieldsAndScroll(async (err, values) => {
 			if (err) {
 				console.log(err);
-				isFormValid = false;
-				// error must be returned, else code breaks
 				return err;
 			}
 			sanatizeFormObj(values);
-			// TODO: put action here
-			isFormValid = true;
+			const hideLoadingMessage = message.loading('Action in progress..', 0);
+			try {
+				const { data: addedTuition } = await axios.post(`${host}/tuition`, values, { withCredentials: true });
+				await axios.post(`${host}/user/add-claim`, { listingId: addedTuition._id, listingCategory: 'tuition' }, { withCredentials: true });
+				hideLoadingMessage();
+				message.success('Tuition added successfully!');
+				push('/dashboard');
+			} catch (error) {
+				console.error(error);
+				hideLoadingMessage();
+				message.error('There was some problem with server!');
+			}
 		});
-		return isFormValid;
 	}
 
 	next() {
@@ -67,7 +77,7 @@ class AddTuition extends Component {
 						{steps.map(item => <Step key={item.title} title={item.title} />)}
 					</Steps>
 					<div className="steps-content my-3">
-						<Form onSubmit={this.handleSubmit} className="pt-3">{steps[current].content}</Form>
+						<Form onSubmit={this.handleFormSubmit} className="pt-3">{steps[current].content}</Form>
 					</div>
 					<Row className="steps-action" justify="end" type="flex">
 						{
@@ -90,5 +100,5 @@ class AddTuition extends Component {
 	}
 }
 
-export default Form.create({ name: 'add-tuition' })(AddTuition);
+export default withRouter(Form.create({ name: 'add-tuition' })(AddTuition));
 

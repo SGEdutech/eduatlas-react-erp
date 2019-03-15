@@ -118,7 +118,7 @@ class Step1 extends Component {
 						<Form.Item
 							label="About Your Institute"
 							hasFeedback={true}>
-							{getFieldDecorator('about', {
+							{getFieldDecorator('description', {
 								// initialValue: code,
 							})(
 								<TextArea rows={4} />

@@ -42,7 +42,7 @@ class TuitionCards extends Component {
 			institute.reviews.forEach(review => {
 				sumOfRatings += review.rating;
 			});
-			const finalRating = institute.reviews.length === 0 ? 2.5 : Math.round(sumOfRatings / institute.reviews.length);
+			const finalRating = institute.reviews.length === 0 ? 2.5 : parseFloat(sumOfRatings / institute.reviews.length).toFixed(2);
 			institute.rating = finalRating;
 			return institute;
 		});
@@ -52,7 +52,6 @@ class TuitionCards extends Component {
 		const { data } = await axios.get(`${host}/tuition/claimed`, { withCredentials: true });
 		this.calcualteAndInsertRatingInTuitions(data);
 		this.setState({ claimedTuitions: [...data, { addNewTuition: true }] });
-
 	}
 
 	handleCardClick = title => {
