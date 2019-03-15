@@ -60,12 +60,14 @@ class TuitionCards extends Component {
 	state = {
 		showAddTuitionModal: false,
 		showTuitionManageModal: false,
-		tuitionName: null
+		tuitionName: null,
+		claimedTuitions: []
 	}
 
 	async componentDidMount() {
 		const { data } = await axios.get(`${host}/tuition/claimed`, { withCredentials: true });
-		console.log(data);
+		this.setState({ claimedTuitions: data })
+		console.log(data)
 	}
 
 	handleCardClick = title => {

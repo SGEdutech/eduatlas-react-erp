@@ -38,7 +38,6 @@ class App extends Component {
 
 	render() {
 		const { userInfo } = this.state;
-		console.log(userInfo);
 		return (
 			<>
 				<Router>
