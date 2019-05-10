@@ -160,7 +160,10 @@ class TuitionCards extends Component {
 							<Button block className="my-2" icon="search" size="large" type="primary">Find & Claim A Listing</Button>
 						</a><br />
 						<Link to="/add-tuition">
-							<Button block className="my-2" icon="plus" onClick={this.handleAddTuitionClick} size="large" type="primary">Add New </Button>
+							<Button block className="my-2" icon="plus" onClick={this.handleAddTuitionClick} size="large" type="primary">Add New Institute </Button>
+						</Link>
+						<Link to="/add-event">
+							<Button block className="my-2" icon="plus" onClick={this.handleAddEventClick} size="large" type="primary">Add New Event </Button>
 						</Link>
 					</div>
 				</Modal>

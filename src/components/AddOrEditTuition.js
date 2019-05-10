@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
-import Step1 from './AddTuition/Step1';
+import Step1 from './AddOrEditTuition/Step1';
 
 import sanatizeFormObj from '../scripts/sanatize-form-obj';
 
@@ -17,7 +17,7 @@ import {
 } from 'antd';
 const Step = Steps.Step;
 
-class AddTuition extends Component {
+class AddOrEditTuition extends Component {
 	state = {
 		current: 0,
 		tuitionInfo: {}
@@ -131,5 +131,5 @@ class AddTuition extends Component {
 	}
 }
 
-export default withRouter(Form.create({ name: 'add-tuition' })(AddTuition));
+export default withRouter(Form.create({ name: 'add-tuition' })(AddOrEditTuition));
 
