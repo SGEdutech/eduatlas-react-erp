@@ -35,7 +35,7 @@ class AddOrEditEvent extends Component {
 
 	async componentDidMount() {
 		const { edit, match: { params: { eventId } } } = this.props;
-		if (edit === false) return;
+		if (Boolean(edit) === false) return;
 		try {
 			const { data: eventInfo } = await axios.get(`${host}/event?_id=${eventId}`);
 			this.setState({ eventInfo });
