@@ -4,23 +4,25 @@ import { host } from '../../config.json';
 
 import { Menu } from 'antd';
 
+const eduatlasAddress = 'https://eduatlas.com';
+
 class LeftMenu extends Component {
 	render() {
 		return (
-			<Menu mode={this.props.mode}>
+			<Menu mode={this.props.mode} selectedKeys={[]} >
 				<Menu.Item key="mail">
-					<a href={host + '/'} target='_blank' rel="noopener noreferrer">Home</a>
+					<a href={eduatlasAddress + '/'} target='_blank' rel="noopener noreferrer">Home</a>
 				</Menu.Item>
 				<Menu.Item key="tuitons">
-					<a href={host + '/searchdetails.html?page=1&items=18&typeOfInfo=tuition'} target='_blank' rel="noopener noreferrer">Institute/Tuitions</a>
+					<a href={eduatlasAddress + '/search/tuition'} target='_blank' rel="noopener noreferrer">Institute/Tuitions</a>
 				</Menu.Item>
 				<Menu.Item key="schools">
-					<a href={host + '/searchdetails.html?page=1&items=18&typeOfInfo=school'} target='_blank' rel="noopener noreferrer">Schools</a>
+					<a href={eduatlasAddress + '/search/school'} target='_blank' rel="noopener noreferrer">Schools</a>
 				</Menu.Item>
 				<Menu.Item key="events">
-					<a href={host + '/searchdetails.html?page=1&items=18&typeOfInfo=event'} target='_blank' rel="noopener noreferrer">Events</a>
+					<a href={eduatlasAddress + '/search/event'} target='_blank' rel="noopener noreferrer">Events</a>
 				</Menu.Item>
-			</Menu>
+			</Menu >
 		);
 	}
 }

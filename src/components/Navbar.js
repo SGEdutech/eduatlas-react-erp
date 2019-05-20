@@ -35,7 +35,7 @@ class Navbar extends Component {
 							<img alt="logo" src={eaLogo}></img>
 						</Col>
 						<Col span={18}>
-							<Link to="/">EduAtlas</Link>
+							<Link to="/">Eduatlas</Link>
 						</Col>
 					</Row>
 				</div>

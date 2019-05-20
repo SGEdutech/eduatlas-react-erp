@@ -76,7 +76,7 @@ class Login extends Component {
 					<Avatar src={eaLogo} size={128} icon="user" />
 				</Row>
 				<Row className="mb-3" type="flex" justify="center">
-					<h2 className="text-capitalize">EduAtlas</h2>
+					<h2 className="text-capitalize">Eduatlas</h2>
 				</Row>
 				<Form onSubmit={this.handleSubmit} className="pt-3">
 					<Row gutter={16}>

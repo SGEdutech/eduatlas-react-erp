@@ -8,6 +8,7 @@ import {
 	Avatar,
 	Button,
 	Card,
+	Divider,
 	List,
 	message,
 	Modal,
@@ -33,14 +34,17 @@ function getRatingColor(rating) {
 
 class TuitionCards extends Component {
 	state = {
-		showAddTuitionModal: false,
-		showTuitionManageModal: false,
+		claimedTuitions: [],
+		claimedSchools: [],
+		claimedEvents: [],
+		showAddListingModal: false,
+		showListingManageModal: false,
 		// TODO: Pull this to variable
-		tuitionInfo: { name: null, _id: null },
-		claimedTuitions: []
+		listingInfo: { name: null, _id: null, listingType: null }
 	}
 
-	calcualteAndInsertRatingInTuitions = institutes => {
+	calcualteAndInsertRating = institutes => {
+		if (Boolean(institutes) === false || Boolean(institutes.length) === false) return;
 		institutes = institutes.map(institute => {
 			let sumOfRatings = 0;
 			institute.reviews.forEach(review => {
@@ -53,35 +57,56 @@ class TuitionCards extends Component {
 	}
 
 	async componentDidMount() {
-		const { data } = await axios.get(`${host}/tuition/claimed`, { withCredentials: true });
-		this.calcualteAndInsertRatingInTuitions(data);
-		this.setState({ claimedTuitions: [...data, { addNewTuition: true }] });
+		try {
+			const { data: claimedTuitionData } = await axios.get(`${host}/tuition/claimed`, { withCredentials: true });
+			this.calcualteAndInsertRating(claimedTuitionData);
+			const { data: claimedSchools } = await axios.get(`${host}/school/claimed`, { withCredentials: true });
+			this.calcualteAndInsertRating(claimedSchools);
+			const { data: claimedEvents } = await axios.get(`${host}/event/claimed`, { withCredentials: true });
+			this.setState({ claimedTuitions: claimedTuitionData.map(tuition => { tuition.listingType = 'tuition'; return tuition }), claimedSchools: claimedSchools.map(school => { school.listingType = 'school'; return school }), claimedEvents: claimedEvents.map(event => { event.listingType = 'event'; return event }) });
+		} catch (error) {
+			console.error(error);
+		}
 	}
 
-	handleCardClick = ({ _id, name }) => {
+	handleCardClick = ({ _id, name, listingType }) => {
 		this.setState({
-			tuitionInfo: { _id, name },
-			showTuitionManageModal: true
+			listingInfo: { _id, name, listingType },
+			showListingManageModal: true
 		});
 	}
 
-	handleAddTuitionCancel = () => this.setState({ showAddTuitionModal: false })
+	handleAddTuitionCancel = () => this.setState({ showAddListingModal: false })
 
-	handleTuitionAddClick = () => this.setState({ showAddTuitionModal: true })
+	handleTuitionAddClick = () => this.setState({ showAddListingModal: true })
 
-	handleTuitionManageCancel = () => this.setState({ showTuitionManageModal: false })
+	handleTuitionManageCancel = () => this.setState({ showListingManageModal: false })
 
-	removeClaimedListingFrom = listingId => this.setState(prevState => ({ claimedTuitions: prevState.claimedTuitions.filter(tuition => tuition._id !== listingId) }));
+	removeClaimedListingFromState = (listingId, listingType) => {
+		switch (listingType) {
+			case 'tuition':
+				this.setState(prevState => ({ claimedTuitions: prevState.claimedTuitions.filter(tuition => tuition._id !== listingId) }));
+				break;
+			case 'school':
+				this.setState(prevState => ({ claimedSchools: prevState.claimedSchools.filter(school => school._id !== listingId) }));
+				break;
+			case 'event':
+				this.setState(prevState => ({ claimedEvents: prevState.claimedEvents.filter(event => event._id !== listingId) }));
+				break;
+			default:
+				break;
+		}
+	}
 
 	handleUnclaimBtnClick = async () => {
-		const { tuitionInfo: { _id: listingId } } = this.state;
+		const { listingInfo: { _id: listingId, listingType } } = this.state;
 		const hideLoadingMessage = message.loading('Action in progress..', 0);
 		try {
-			await axios.delete(`${host}/user/remove-claim`, { data: { listingCategory: 'tuition', listingId }, withCredentials: true });
+			await axios.delete(`${host}/user/remove-claim`, { data: { listingCategory: listingType, listingId }, withCredentials: true });
 			hideLoadingMessage();
 			message.success('Unclaim successful!');
-			this.removeClaimedListingFrom(listingId);
-			this.setState({ showTuitionManageModal: false });
+			this.removeClaimedListingFromState(listingId, listingType);
+			this.setState({ showListingManageModal: false });
 		} catch (error) {
 			console.error(error);
 			hideLoadingMessage();
@@ -90,57 +115,93 @@ class TuitionCards extends Component {
 	}
 
 	render() {
-		const { claimedTuitions, showAddTuitionModal, showTuitionManageModal, tuitionInfo } = this.state;
+		const { claimedTuitions, claimedSchools, claimedEvents, showAddListingModal, showListingManageModal, listingInfo } = this.state;
 		return (
 			<>
+				<Card
+					className="h-100"
+					hoverable
+					onClick={this.handleTuitionAddClick}
+				>
+					<Meta
+						description={
+							<Row align="middle" justify="center" type="flex">Add New</Row>
+						}
+					/>
+				</Card>
+				<Divider orientation="left">Institute/Tuitions</Divider>
 				<List
 					grid={gridConfig}
 					dataSource={claimedTuitions}
 					renderItem={item => (
-						Boolean(item.addNewTuition) === false ?
-							<List.Item>
-								<Card
-									hoverable
-									onClick={() => this.handleCardClick(item)}>
-									<Meta
-										avatar={<Avatar src={item.img_tuitionCoverPic} style={{ backgroundColor: '#00bcd4' }}>{item.name.substr(0, 1).toUpperCase()}</Avatar>}
-										title={item.name}
-										description={
-											<Tag color={getRatingColor(item.rating)}>{item.rating}/5</Tag>
-										}
-									/>
-								</Card>
-							</List.Item> :
-							<List.Item>
-								<Card
-									className="h-100"
-									hoverable
-									onClick={this.handleTuitionAddClick}
-								>
-									<Meta
-										description={
-											<Row align="middle" justify="center" type="flex">Add New</Row>
-										}
-									/>
-								</Card>
-							</List.Item>
+						<List.Item>
+							<Card
+								hoverable
+								onClick={() => this.handleCardClick(item)}>
+								<Meta
+									avatar={<Avatar src={item.img_tuitionCoverPic} style={{ backgroundColor: '#00bcd4' }}>{item.name.substr(0, 1).toUpperCase()}</Avatar>}
+									title={item.name}
+									description={
+										<Tag color={getRatingColor(item.rating)}>{item.rating}/5</Tag>
+									}
+								/>
+							</Card>
+						</List.Item>
 					)}
 				/>
-				{/* Tuition Modal */}
+				<Divider orientation="left">Events</Divider>
+				<List
+					grid={gridConfig}
+					dataSource={claimedEvents}
+					renderItem={item => (
+						<List.Item>
+							<Card
+								hoverable
+								onClick={() => this.handleCardClick(item)}>
+								<Meta
+									avatar={<Avatar src={item.img_eventCoverPic} style={{ backgroundColor: '#00bcd4' }}>{item.name.substr(0, 1).toUpperCase()}</Avatar>}
+									title={item.name}
+								/>
+							</Card>
+						</List.Item>
+					)}
+				/>
+				<Divider orientation="left">Schools</Divider>
+				<List
+					grid={gridConfig}
+					dataSource={claimedSchools}
+					renderItem={item => (
+						<List.Item>
+							<Card
+								hoverable
+								onClick={() => this.handleCardClick(item)}>
+								<Meta
+									avatar={<Avatar src={item.img_schoolCoverPic} style={{ backgroundColor: '#00bcd4' }}>{item.name.substr(0, 1).toUpperCase()}</Avatar>}
+									title={item.name}
+									description={
+										<Tag color={getRatingColor(item.rating)}>{item.rating}/5</Tag>
+									}
+								/>
+							</Card>
+						</List.Item>
+					)}
+				/>
+
+				{/* Listing Modal */}
 				<Modal
 					centered
 					footer={null}
 					onCancel={this.handleTuitionManageCancel}
-					title={tuitionInfo.name}
-					visible={showTuitionManageModal}>
+					title={listingInfo.name}
+					visible={showListingManageModal}>
 					<div className="text-center">
-						<a href={host + '/app/' + tuitionInfo._id} target='_blank' rel="noopener noreferrer">
+						{listingInfo.listingType === 'tuition' && <a href={host + '/app/' + listingInfo._id} target='_blank' rel="noopener noreferrer">
 							<Button block className="my-2" icon="tool" size="large" type="primary">Study Monitor</Button><br />
-						</a>
-						<a href={host + '/TuitionDetails2.0.html?_id=' + tuitionInfo._id} target='_blank' rel="noopener noreferrer">
+						</a>}
+						<a href={'https://eduatlas.com/' + listingInfo.listingType + '/' + listingInfo._id} target='_blank' rel="noopener noreferrer">
 							<Button block className="my-2" icon="eye" size="large" type="primary">View Listing</Button>
 						</a><br />
-						<Link to={`/edit-tuition/${tuitionInfo._id}`}><Button block className="my-2" icon="edit" size="large" type="primary">Edit Listing</Button></Link><br />
+						<Link to={`/edit-${listingInfo.listingType}/${listingInfo._id}`}><Button block className="my-2" icon="edit" size="large" type="primary">Edit Listing</Button></Link><br />
 						<Popconfirm title="Are you sure ?" onConfirm={this.handleUnclaimBtnClick} okText="Yes" cancelText="No">
 							<Button block className="my-2" icon="delete" size="large" type="danger">
 								Unclaim
@@ -148,15 +209,15 @@ class TuitionCards extends Component {
 						</Popconfirm>
 					</div>
 				</Modal>
-				{/* Add Tuition Modal */}
+				{/* Add listing Modal */}
 				<Modal
 					centered
 					closable={false}
 					footer={null}
 					onCancel={this.handleAddTuitionCancel}
-					visible={showAddTuitionModal}>
+					visible={showAddListingModal}>
 					<div className="text-center">
-						<a href={host + '/'} target='_blank' rel="noopener noreferrer">
+						<a href={'https://eduatlas.com/'} target='_blank' rel="noopener noreferrer">
 							<Button block className="my-2" icon="search" size="large" type="primary">Find & Claim A Listing</Button>
 						</a><br />
 						<Link to="/add-tuition">
