@@ -19,6 +19,8 @@ import {
 } from 'antd';
 const Step = Steps.Step;
 
+const eduatlasAddress = 'https://eduatlas.com';
+
 class AddOrEditEvent extends Component {
 	state = {
 		current: 0,
@@ -37,7 +39,7 @@ class AddOrEditEvent extends Component {
 		const { edit, match: { params: { eventId } } } = this.props;
 		if (edit === false) return;
 		try {
-			const { data: eventInfo } = await axios.get(`${host}/event?_id=${eventId}`);
+			const { data: eventInfo } = await axios.get(`${eduatlasAddress}/event?_id=${eventId}`);
 			this.setState({ eventInfo });
 		} catch (error) {
 			message.error('There was a problem connecting with the server!');
@@ -56,7 +58,7 @@ class AddOrEditEvent extends Component {
 		const { history: { push }, match: { params: { eventId } } } = this.props;
 		const hideLoadingMessage = message.loading('Action in progress..', 0);
 		try {
-			const { data: eventInfo } = await axios.put(`${host}/event/${eventId}`, values);
+			const { data: eventInfo } = await axios.put(`${eduatlasAddress}/event/${eventId}`, values);
 			this.setState({ eventInfo });
 			hideLoadingMessage();
 			message.success('Event edited successfully!');
@@ -74,7 +76,7 @@ class AddOrEditEvent extends Component {
 		try {
 			const config = { headers: { 'Content-Type': 'multipart/form-data' } };
 			const form_data = convertModelToFormData(values);
-			const { data: addedEvent } = await axios.post(`${host}/event`, form_data, config);
+			const { data: addedEvent } = await axios.post(`${eduatlasAddress}/event`, form_data, config);
 			if (Boolean(addedEvent._id) === false) console.log(addedEvent, 'ERR: event data not fetched')
 			await axios.post(`${host}/user/add-claim`, { listingId: addedEvent._id, listingCategory: 'event' }, { withCredentials: true });
 			hideLoadingMessage();

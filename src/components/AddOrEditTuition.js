@@ -17,6 +17,8 @@ import {
 } from 'antd';
 const Step = Steps.Step;
 
+const eduatlasAddress = 'https://eduatlas.com';
+
 class AddOrEditTuition extends Component {
 	state = {
 		current: 0,
@@ -27,7 +29,7 @@ class AddOrEditTuition extends Component {
 		const { edit, match: { params: { tuitionId } } } = this.props;
 		if (edit === false) return;
 		try {
-			const { data: tuitionInfo } = await axios.get(`${host}/tuition?_id=${tuitionId}`);
+			const { data: tuitionInfo } = await axios.get(`${eduatlasAddress}/tuition?_id=${tuitionId}`);
 			this.setState({ tuitionInfo });
 		} catch (error) {
 			message.error('There was a problem connecting with the server!');
@@ -43,7 +45,7 @@ class AddOrEditTuition extends Component {
 		const { history: { push }, match: { params: { tuitionId } } } = this.props;
 		const hideLoadingMessage = message.loading('Action in progress..', 0);
 		try {
-			const { data: tuitionInfo } = await axios.put(`${host}/tuition/${tuitionId}`, values);
+			const { data: tuitionInfo } = await axios.put(`${eduatlasAddress}/tuition/${tuitionId}`, values);
 			this.setState({ tuitionInfo });
 			hideLoadingMessage();
 			message.success('Tuition edited successfully!');
@@ -59,7 +61,7 @@ class AddOrEditTuition extends Component {
 		const { history: { push } } = this.props;
 		const hideLoadingMessage = message.loading('Action in progress..', 0);
 		try {
-			const { data: addedTuition } = await axios.post(`${host}/tuition`, values);
+			const { data: addedTuition } = await axios.post(`${eduatlasAddress}/tuition`, values);
 			await axios.post(`${host}/user/add-claim`, { listingId: addedTuition._id, listingCategory: 'tuition' }, { withCredentials: true });
 			hideLoadingMessage();
 			message.success('Tuition added successfully!');
