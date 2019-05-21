@@ -29,7 +29,6 @@ const children = [
 class Step1 extends Component {
 	render() {
 		const { getFieldDecorator, tuitionInfo } = this.props;
-		console.log(tuitionInfo);
 		return (
 			<>
 				<Row gutter={16}>

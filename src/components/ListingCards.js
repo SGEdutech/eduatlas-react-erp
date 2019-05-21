@@ -22,8 +22,6 @@ const gridConfig = {
 	gutter: 16, xs: 1, md: 2, lg: 3, xl: 3, xxl: 4
 };
 
-const eduatlasAddress = 'https://eduatlas.com';
-
 function getRatingColor(rating) {
 	if (rating >= 4) {
 		return 'green';

@@ -8,7 +8,7 @@ import Step2 from './AddOrEditEvent/Step2';
 import sanatizeFormObj from '../scripts/sanatize-form-obj';
 import convertModelToFormData from '../scripts/modelToFormData';
 
-import { host } from '../config.json';
+import { host, eduatlas as eduatlasAddress } from '../config.json';
 
 import {
 	Button,
@@ -19,7 +19,6 @@ import {
 } from 'antd';
 const Step = Steps.Step;
 
-const eduatlasAddress = 'https://eduatlas.com';
 
 class AddOrEditEvent extends Component {
 	state = {
@@ -37,9 +36,9 @@ class AddOrEditEvent extends Component {
 
 	async componentDidMount() {
 		const { edit, match: { params: { eventId } } } = this.props;
-		if (edit === false) return;
+		if (Boolean(edit) === false) return;
 		try {
-			const { data: eventInfo } = await axios.get(`${eduatlasAddress}/event?_id=${eventId}`);
+			const { data: eventInfo } = await axios.get(`${host}/event?_id=${eventId}`);
 			this.setState({ eventInfo });
 		} catch (error) {
 			message.error('There was a problem connecting with the server!');
@@ -54,11 +53,12 @@ class AddOrEditEvent extends Component {
 		this.setState({ loading: false });
 	}
 
-	initEditEvent = async values => {
+	initEditEvent = async () => {
+		const { formStepsData } = this.state; 
 		const { history: { push }, match: { params: { eventId } } } = this.props;
 		const hideLoadingMessage = message.loading('Action in progress..', 0);
 		try {
-			const { data: eventInfo } = await axios.put(`${eduatlasAddress}/event/${eventId}`, values);
+			const { data: eventInfo } = await axios.put(`${host}/event/${eventId}`, formStepsData);
 			this.setState({ eventInfo });
 			hideLoadingMessage();
 			message.success('Event edited successfully!');
@@ -70,13 +70,14 @@ class AddOrEditEvent extends Component {
 		}
 	}
 
-	initAddEvent = async values => {
+	initAddEvent = async () => {
+		const { formStepsData } = this.state;
 		const { history: { push } } = this.props;
 		const hideLoadingMessage = message.loading('Action in progress..', 0);
 		try {
 			const config = { headers: { 'Content-Type': 'multipart/form-data' } };
-			const form_data = convertModelToFormData(values);
-			const { data: addedEvent } = await axios.post(`${eduatlasAddress}/event`, form_data, config);
+			const form_data = convertModelToFormData(formStepsData);
+			const { data: addedEvent } = await axios.post(`${host}/event`, form_data, config);
 			if (Boolean(addedEvent._id) === false) console.log(addedEvent, 'ERR: event data not fetched')
 			await axios.post(`${host}/user/add-claim`, { listingId: addedEvent._id, listingCategory: 'event' }, { withCredentials: true });
 			hideLoadingMessage();
@@ -98,11 +99,11 @@ class AddOrEditEvent extends Component {
 				return err;
 			}
 			sanatizeFormObj(values);
+			if (selectedFile) formStepsData.eventCoverPic = selectedFile.originFileObj;
 			this.setState(previousState => ({
 				formStepsData: { ...previousState.formStepsData, ...values }
 			}));
-			if (selectedFile) formStepsData.eventCoverPic = selectedFile.originFileObj;
-			edit ? this.initEditEvent(formStepsData) : this.initAddEvent(formStepsData);
+			edit ? this.initEditEvent() : this.initAddEvent();
 		});
 	}
 
