@@ -15,7 +15,6 @@ class CourseCard extends Component {
 			<Card
 				actions={[<Icon onClick={() => removeCourse(courseInfo)} type="delete" />]}
 				className="h-100"
-				onClick={this.handleTuitionAddClick}
 				title={courseInfo.title}
 			>
 				<Row>

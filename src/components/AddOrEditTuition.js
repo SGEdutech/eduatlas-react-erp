@@ -5,6 +5,10 @@ import { withRouter } from 'react-router-dom';
 import Step1 from './AddOrEditTuition/Step1';
 import Step2 from './AddOrEditTuition/Step2';
 import Step3 from './AddOrEditTuition/Step3';
+import Step4 from './AddOrEditTuition/Step4';
+import Step5 from './AddOrEditTuition/Step5';
+import Step6 from './AddOrEditTuition/Step6';
+import Step7 from './AddOrEditEvent/Step2';
 
 import sanatizeFormObj from '../scripts/sanatize-form-obj';
 import convertModelToFormData from '../scripts/modelToFormData';
@@ -23,7 +27,7 @@ const Step = Steps.Step;
 class AddOrEditTuition extends Component {
 	state = {
 		current: 0,
-		formStepsData: { coursesOffered: [] },
+		formStepsData: { bragging: [], coursesOffered: [], gallery: [], team: [] },
 		loading: false,
 		selectedFile: null,
 		selectedFileList: [],
@@ -43,6 +47,7 @@ class AddOrEditTuition extends Component {
 	}
 
 	addCourse = courseData => {
+		// used by courses step
 		const { edit } = this.props;
 		this.setState(previousState => {
 			const newState = previousState;
@@ -52,14 +57,43 @@ class AddOrEditTuition extends Component {
 			return newState;
 		});
 	}
-	removeCourse = courseData => {
-		// TODO: course names must be unique
+
+	addFaculty = facultyData => {
+		// used by results step
 		const { edit } = this.props;
 		this.setState(previousState => {
 			const newState = previousState;
 			Boolean(edit) === false ?
-				newState.formStepsData.coursesOffered = newState.formStepsData.coursesOffered.filter(course => course.title !== courseData.title) :
-				newState.tuitionInfo.coursesOffered = newState.tuitionInfo.coursesOffered.filter(course => course.title !== courseData.title);
+				newState.formStepsData.team.push(facultyData) :
+				newState.tuitionInfo.team.push(facultyData);
+			return newState;
+		});
+	}
+
+	addFileToState = newState => {
+		this.setState(() => newState);
+	}
+
+	addGallery = imageData => {
+		// used by results step
+		const { edit } = this.props;
+		this.setState(previousState => {
+			const newState = previousState;
+			Boolean(edit) === false ?
+				newState.formStepsData.gallery.push(imageData) :
+				newState.tuitionInfo.gallery.push(imageData);
+			return newState;
+		});
+	}
+
+	addResult = resultData => {
+		// used by results step
+		const { edit } = this.props;
+		this.setState(previousState => {
+			const newState = previousState;
+			Boolean(edit) === false ?
+				newState.formStepsData.bragging.push(resultData) :
+				newState.tuitionInfo.bragging.push(resultData);
 			return newState;
 		});
 	}
@@ -69,6 +103,23 @@ class AddOrEditTuition extends Component {
 		this.setState({ loading: true });
 		this.handleFormSubmit();
 		this.setState({ loading: false });
+	}
+
+	handleFormSubmit = () => {
+		const { edit, form } = this.props;
+		const { formStepsData, selectedFile } = this.state;
+		form.validateFieldsAndScroll(async (err, values) => {
+			if (err) {
+				console.log(err);
+				return err;
+			}
+			sanatizeFormObj(values);
+			if (selectedFile) formStepsData.tuitionCoverPic = selectedFile.originFileObj;
+			this.setState(previousState => ({
+				formStepsData: { ...previousState.formStepsData, ...values }
+			}));
+			edit ? this.initEditTuition() : this.initAddTuition();
+		});
 	}
 
 	initEditTuition = async () => {
@@ -107,23 +158,6 @@ class AddOrEditTuition extends Component {
 		}
 	}
 
-	handleFormSubmit = () => {
-		const { edit, form } = this.props;
-		const { formStepsData, selectedFile } = this.state;
-		form.validateFieldsAndScroll(async (err, values) => {
-			if (err) {
-				console.log(err);
-				return err;
-			}
-			sanatizeFormObj(values);
-			if (selectedFile) formStepsData.tuitionCoverPic = selectedFile.originFileObj;
-			this.setState(previousState => ({
-				formStepsData: { ...previousState.formStepsData, ...values }
-			}));
-			edit ? this.initEditTuition() : this.initAddTuition();
-		});
-	}
-
 	next() {
 		// Store data in state
 		const { form } = this.props;
@@ -150,6 +184,57 @@ class AddOrEditTuition extends Component {
 		this.setState({ current });
 	}
 
+	removeCourse = courseData => {
+		// used by courses step
+		// TODO: course names must be unique
+		const { edit } = this.props;
+		this.setState(previousState => {
+			const newState = previousState;
+			Boolean(edit) === false ?
+				newState.formStepsData.coursesOffered = newState.formStepsData.coursesOffered.filter(course => course.title !== courseData.title) :
+				newState.tuitionInfo.coursesOffered = newState.tuitionInfo.coursesOffered.filter(course => course.title !== courseData.title);
+			return newState;
+		});
+	}
+
+	removeFaculty = facultyData => {
+		// used by results step
+		// TODO: result title must be unique
+		const { edit } = this.props;
+		this.setState(previousState => {
+			const newState = previousState;
+			Boolean(edit) === false ?
+				newState.formStepsData.team = newState.formStepsData.team.filter(result => result.name !== facultyData.name) :
+				newState.tuitionInfo.team = newState.tuitionInfo.team.filter(result => result.name !== facultyData.name);
+			return newState;
+		});
+	}
+
+	removeGallery = imageData => {
+		// used by results step
+		// TODO: result title must be unique
+		const { edit } = this.props;
+		this.setState(previousState => {
+			const newState = previousState;
+			Boolean(edit) === false ?
+				newState.formStepsData.gallery = newState.formStepsData.gallery.filter(image => image.imageName !== imageData.imageName) :
+				newState.tuitionInfo.gallery = newState.tuitionInfo.gallery.filter(image => image.imageName !== imageData.imageName);
+			return newState;
+		});
+	}
+
+	removeResult = resultData => {
+		// used by results step
+		// TODO: result title must be unique
+		const { edit } = this.props;
+		this.setState(previousState => {
+			const newState = previousState;
+			Boolean(edit) === false ?
+				newState.formStepsData.bragging = newState.formStepsData.bragging.filter(result => result.title !== resultData.title) :
+				newState.tuitionInfo.bragging = newState.tuitionInfo.bragging.filter(result => result.title !== resultData.title);
+			return newState;
+		});
+	}
 
 	render() {
 		const { current, tuitionInfo, formStepsData, loading, selectedFileList } = this.state;
@@ -166,6 +251,22 @@ class AddOrEditTuition extends Component {
 			{
 				title: 'Courses',
 				content: <Step3 addCourse={this.addCourse} removeCourse={this.removeCourse} tuitionInfo={edit ? tuitionInfo : formStepsData} />
+			},
+			{
+				title: 'Results',
+				content: <Step4 addResult={this.addResult} removeResult={this.removeResult} tuitionInfo={edit ? tuitionInfo : formStepsData} />
+			},
+			{
+				title: 'Faculty',
+				content: <Step5 addFaculty={this.addFaculty} removeFaculty={this.removeFaculty} tuitionInfo={edit ? tuitionInfo : formStepsData} />
+			},
+			{
+				title: 'Gallery',
+				content: <Step6 addGallery={this.addGallery} removeGallery={this.removeGallery} tuitionInfo={edit ? tuitionInfo : formStepsData} />
+			},
+			{
+				title: 'Cover Image',
+				content: <Step7 eventInfo={edit ? tuitionInfo : formStepsData} selectedFileList={selectedFileList} addFileToState={this.addFileToState} />
 			}
 		];
 

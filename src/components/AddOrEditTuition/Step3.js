@@ -16,12 +16,6 @@ import {
 } from 'antd';
 const { Meta } = Card;
 
-const colLayout = {
-	xs: 24,
-	md: 8,
-	lg: 6
-};
-
 const gridConfig = {
 	gutter: 16, xs: 1, md: 2, lg: 3, xl: 3, xxl: 4
 };

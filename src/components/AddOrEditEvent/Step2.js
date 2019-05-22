@@ -3,9 +3,7 @@ import React, { Component } from 'react';
 import {
 	Button,
 	Col,
-	Form,
 	Icon,
-	Input,
 	Row,
 	Upload
 } from 'antd';

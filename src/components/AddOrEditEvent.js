@@ -141,7 +141,7 @@ class AddOrEditEvent extends Component {
 			title: 'Necessary Info',
 			content: <Step1 eventInfo={edit ? eventInfo : formStepsData} getFieldDecorator={this.props.form.getFieldDecorator} />
 		}, {
-			title: 'Images',
+			title: 'Cover Image',
 			content: <Step2 eventInfo={edit ? eventInfo : formStepsData} selectedFileList={selectedFileList} addFileToState={this.addFileToState} />
 		}];
 
