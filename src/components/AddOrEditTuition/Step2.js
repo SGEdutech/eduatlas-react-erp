@@ -9,6 +9,7 @@ import {
 	Row,
 	Select
 } from 'antd';
+const { TextArea } = Input;
 const Option = Select.Option;
 
 const colLayout = {
@@ -16,6 +17,15 @@ const colLayout = {
 	md: 12
 };
 
+const children = [
+	<Option key="1" value="Library/Study Area">Library/Study Area</Option>,
+	<Option key="2" value="Smart Classes">Smart Classes</Option>,
+	<Option key="3" value="Study Material">Study Material</Option>,
+	<Option key="4" value="AC Classes">AC Classes</Option>,
+	<Option key="5" value="Internet/WIFI">Internet/WIFI</Option>,
+	<Option key="6" value="Transport">Transport</Option>,
+	<Option key="7" value="E-Learning">E-Learning</Option>
+];
 
 class Step2 extends Component {
 	render() {
@@ -37,42 +47,6 @@ class Step2 extends Component {
 							hasFeedback={true}>
 							{getFieldDecorator('contactPerson', {
 								initialValue: tuitionInfo.contactPerson
-							})(
-								<Input />
-							)}
-						</Form.Item>
-					</Col>
-					<Col {...colLayout}>
-						<Form.Item
-							label="Primary Number"
-							hasFeedback={true}>
-							{getFieldDecorator('primaryNumber', {
-								initialValue: tuitionInfo.primaryNumber
-							})(
-								<InputNumber className="w-100" max={99999999999} />
-							)}
-						</Form.Item>
-					</Col>
-					<Col {...colLayout}>
-						<Form.Item
-							label="Secondary Number"
-							hasFeedback={true}>
-							{getFieldDecorator('secondaryNumber', {
-								initialValue: tuitionInfo.secondaryNumber
-							})(
-								<InputNumber className="w-100" max={99999999999} />
-							)}
-						</Form.Item>
-					</Col>
-					<Col {...colLayout}>
-						<Form.Item
-							label="Email"
-							hasFeedback={true}>
-							{getFieldDecorator('email', {
-								initialValue: tuitionInfo.email,
-								rules: [{
-									type: 'email', message: 'Not a valid email!'
-								}]
 							})(
 								<Input />
 							)}
@@ -130,6 +104,37 @@ class Step2 extends Component {
 								initialValue: tuitionInfo.instaLink
 							})(
 								<Input addonBefore={<Icon type="instagram" />} />
+							)}
+						</Form.Item>
+					</Col>
+				</Row>
+				<Row gutter={16}>
+					<Col span={24}>
+						<Form.Item
+							label="About Your Institute"
+							hasFeedback={true}>
+							{getFieldDecorator('description', {
+								initialValue: tuitionInfo.description
+							})(
+								<TextArea rows={4} />
+							)}
+						</Form.Item>
+					</Col>
+				</Row>
+				<Row gutter={16}>
+					<Col span={24}>
+						<Form.Item
+							label="Facilities"
+							hasFeedback={true}>
+							{getFieldDecorator('facilities', {
+								initialValue: tuitionInfo.facilities
+							})(
+								<Select
+									mode="tags"
+									style={{ width: '100%' }}
+									placeholder="Tags Mode">
+									{children}
+								</Select>
 							)}
 						</Form.Item>
 					</Col>

@@ -8,7 +8,6 @@ import {
 	Select,
 	InputNumber
 } from 'antd';
-const { TextArea } = Input;
 const Option = Select.Option;
 
 const colLayout = {
@@ -16,17 +15,29 @@ const colLayout = {
 	md: 12
 };
 
-const children = [
-	<Option key="1" value="Library/Study Area">Library/Study Area</Option>,
-	<Option key="2" value="Smart Classes">Smart Classes</Option>,
-	<Option key="3" value="Study Material">Study Material</Option>,
-	<Option key="4" value="AC Classes">AC Classes</Option>,
-	<Option key="5" value="Internet/WIFI">Internet/WIFI</Option>,
-	<Option key="6" value="Transport">Transport</Option>,
-	<Option key="7" value="E-Learning">E-Learning</Option>
+const tuitionCategories = [
+	<Option key="1" value="Tuition Centers">Tuition Centers</Option>,
+	<Option key="2" value="Coaching Centers">Coaching Centers</Option>,
+	<Option key="3" value="Enhanced Learning">Enhanced Learning</Option>,
+	<Option key="4" value="Hobby Centers">Hobby Centers</Option>,
+	<Option key="5" value="Sports Center">Sports Center</Option>,
+	<Option key="6" value="Education Companies">Education Companies</Option>,
 ];
 
 class Step1 extends Component {
+	validateMetaTags = (rule, value, callback) => {
+		if (Boolean(value) === false) value = [];
+		const letters = /^[A-Za-z]+$/;
+		let isValidated = true;
+		value.forEach(tag => {
+			if (!tag.match(letters)) isValidated = false;
+		});
+		if (!isValidated) {
+			callback('Illegal characters found');
+		}
+		callback();
+	}
+
 	render() {
 		const { getFieldDecorator, tuitionInfo } = this.props;
 		return (
@@ -112,16 +123,44 @@ class Step1 extends Component {
 							)}
 						</Form.Item>
 					</Col>
-				</Row>
-				<Row gutter={16}>
-					<Col span={24}>
+					<Col {...colLayout}>
 						<Form.Item
-							label="About Your Institute"
+							label="Primary Number"
 							hasFeedback={true}>
-							{getFieldDecorator('description', {
-								initialValue: tuitionInfo.description
+							{getFieldDecorator('primaryNumber', {
+								initialValue: tuitionInfo.primaryNumber,
+								rules: [{
+									required: true, message: 'Phone Number is required!'
+								}]
 							})(
-								<TextArea rows={4} />
+								<InputNumber className="w-100" max={99999999999} />
+							)}
+						</Form.Item>
+					</Col>
+					<Col {...colLayout}>
+						<Form.Item
+							label="Secondary Number"
+							hasFeedback={true}>
+							{getFieldDecorator('secondaryNumber', {
+								initialValue: tuitionInfo.secondaryNumber
+							})(
+								<InputNumber className="w-100" max={99999999999} />
+							)}
+						</Form.Item>
+					</Col>
+					<Col {...colLayout}>
+						<Form.Item
+							label="Email"
+							hasFeedback={true}>
+							{getFieldDecorator('email', {
+								initialValue: tuitionInfo.email,
+								rules: [{
+									type: 'email', message: 'Not a valid email!'
+								}, {
+									required: true, message: 'Email is required!'
+								}]
+							})(
+								<Input />
 							)}
 						</Form.Item>
 					</Col>
@@ -129,16 +168,37 @@ class Step1 extends Component {
 				<Row gutter={16}>
 					<Col span={24}>
 						<Form.Item
-							label="Facilities"
+							label="Category"
 							hasFeedback={true}>
-							{getFieldDecorator('facilities', {
-								initialValue: tuitionInfo.facilities
+							{getFieldDecorator('category', {
+								initialValue: tuitionInfo.category,
+								rules: [{
+									required: true, message: 'Category is required!'
+								}]
+							})(
+								<Select placeholder="Choose One">
+									{tuitionCategories}
+								</Select>
+							)}
+						</Form.Item>
+					</Col>
+				</Row>
+				<Row gutter={16}>
+					<Col span={24}>
+						<Form.Item
+							extra="Meta tags will help our search alogrithm find your listing easily. Each tag must be a single word. Example: Guitar"
+							label="Meta"
+							hasFeedback={true}>
+							{getFieldDecorator('meta', {
+								initialValue: tuitionInfo.meta,
+								rules: [{
+									required: true, message: 'Meta is required!'
+								},
+								{ validator: this.validateMetaTags }]
 							})(
 								<Select
-									mode="tags"
-									style={{ width: '100%' }}
-									placeholder="Tags Mode">
-									{children}
+									maxTagTextLength={35}
+									mode="tags">
 								</Select>
 							)}
 						</Form.Item>

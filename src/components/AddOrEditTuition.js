@@ -241,11 +241,15 @@ class AddOrEditTuition extends Component {
 		const { edit } = this.props;
 		const steps = [
 			{
-				title: 'Necessary Info',
+				title: 'Contact Info',
 				content: <Step1 getFieldDecorator={this.props.form.getFieldDecorator} tuitionInfo={edit ? tuitionInfo : formStepsData} />
 			},
 			{
-				title: 'Additional Info',
+				title: 'Cover Image',
+				content: <Step7 eventInfo={edit ? tuitionInfo : formStepsData} selectedFileList={selectedFileList} addFileToState={this.addFileToState} />
+			},
+			{
+				title: 'Institute Info',
 				content: <Step2 getFieldDecorator={this.props.form.getFieldDecorator} tuitionInfo={edit ? tuitionInfo : formStepsData} />
 			},
 			{
@@ -263,10 +267,6 @@ class AddOrEditTuition extends Component {
 			{
 				title: 'Gallery',
 				content: <Step6 addGallery={this.addGallery} removeGallery={this.removeGallery} tuitionInfo={edit ? tuitionInfo : formStepsData} />
-			},
-			{
-				title: 'Cover Image',
-				content: <Step7 eventInfo={edit ? tuitionInfo : formStepsData} selectedFileList={selectedFileList} addFileToState={this.addFileToState} />
 			}
 		];
 
@@ -277,21 +277,22 @@ class AddOrEditTuition extends Component {
 						{steps.map(item => <Step key={item.title} title={item.title} />)}
 					</Steps>
 					<div className="steps-content my-3">
+						<h3>{steps[current].title}</h3>
 						<Form onSubmit={this.handleFormSubmit} className="pt-3">{steps[current].content}</Form>
 					</div>
 					<Row className="steps-action" justify="end" type="flex">
 						{
-							current < steps.length - 1 && <Button type="primary" onClick={() => this.next()}>Next</Button>
-						}
-						{
-							current === steps.length - 1 && <Button loading={loading} type="primary" onClick={this.handleDoneClick}>Done</Button>
-						}
-						{
 							current > 0 && (
-								<Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
+								<Button style={{ marginRight: 8 }} onClick={() => this.prev()}>
 									Previous
 								</Button>
 							)
+						}
+						{
+							current < steps.length - 1 && <Button type="primary" onClick={() => this.next()}>Next</Button>
+						}
+						{
+							current === steps.length - 1 && <Button loading={loading} type="primary" onClick={this.handleDoneClick}>Publish</Button>
 						}
 					</Row>
 				</div>

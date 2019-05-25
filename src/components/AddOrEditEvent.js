@@ -54,7 +54,7 @@ class AddOrEditEvent extends Component {
 	}
 
 	initEditEvent = async () => {
-		const { formStepsData } = this.state; 
+		const { formStepsData } = this.state;
 		const { history: { push }, match: { params: { eventId } } } = this.props;
 		const hideLoadingMessage = message.loading('Action in progress..', 0);
 		try {
@@ -138,7 +138,7 @@ class AddOrEditEvent extends Component {
 		const { current, eventInfo, formStepsData, loading, selectedFileList } = this.state;
 		const { edit } = this.props;
 		const steps = [{
-			title: 'Necessary Info',
+			title: 'Contact Info',
 			content: <Step1 eventInfo={edit ? eventInfo : formStepsData} getFieldDecorator={this.props.form.getFieldDecorator} />
 		}, {
 			title: 'Cover Image',
@@ -152,21 +152,22 @@ class AddOrEditEvent extends Component {
 						{steps.map(item => <Step key={item.title} title={item.title} />)}
 					</Steps>
 					<div className="steps-content my-3">
+						<h3>{steps[current].title}</h3>
 						<Form onSubmit={this.handleFormSubmit} className="pt-3">{steps[current].content}</Form>
 					</div>
 					<Row className="steps-action" justify="end" type="flex">
 						{
-							current < steps.length - 1 && <Button type="primary" onClick={() => this.next()}>Next</Button>
-						}
-						{
-							current === steps.length - 1 && <Button loading={loading} type="primary" onClick={this.handleDoneClick}>Done</Button>
-						}
-						{
 							current > 0 && (
-								<Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
+								<Button style={{ marginRight: 8 }} onClick={() => this.prev()}>
 									Previous
 								</Button>
 							)
+						}
+						{
+							current < steps.length - 1 && <Button type="primary" onClick={() => this.next()}>Next</Button>
+						}
+						{
+							current === steps.length - 1 && <Button loading={loading} type="primary" onClick={this.handleDoneClick}>Publish</Button>
 						}
 					</Row>
 				</div>
