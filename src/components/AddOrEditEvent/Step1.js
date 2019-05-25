@@ -20,17 +20,16 @@ const colLayout = {
 };
 
 const children = [
-	<Option key="1" value="Cultural">Cultural</Option>,
-	<Option key="2" value="Annual Day">Annual Day</Option>,
-	<Option key="3" value="Music">Music</Option>,
-	<Option key="4" value="Programming">Programming</Option>,
-	<Option key="5" value="Fest">Fest</Option>,
-	<Option key="6" value="Educational">Educational</Option>,
-	<Option key="7" value="Comedy">Comedy</Option>,
-	<Option key="8" value="Food And Drink">Food And Drink</Option>,
-	<Option key="9" value="Exhibition">Exhibition</Option>,
+	<Option key="1" value="Classes & Workshops">Classes & Workshops</Option>,
+	<Option key="2" value="Camps">Camps</Option>,
+	<Option key="3" value="Festivals ">Festivals </Option>,
+	<Option key="4" value="Adventure & Sports">Adventure & Sports</Option>,
+	<Option key="5" value="Scholarships">Scholarships</Option>,
+	<Option key="6" value="Competitions">Competitions</Option>,
+	<Option key="7" value="Concerts & Shows">Concerts & Shows</Option>,
+	<Option key="8" value="Fairs & Exhibitions">Fairs & Exhibitions</Option>,
 	<Option key="10" value="Travel And Activities">Travel And Activities</Option>,
-	<Option key="11" value="Others">Others</Option>
+	<Option key="11" value="Fun places to visit">Fun places to visit</Option>
 ];
 
 class Step1 extends Component {
