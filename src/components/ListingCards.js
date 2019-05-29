@@ -198,6 +198,7 @@ class ListingCards extends Component {
 						{listingInfo.listingType === 'tuition' && <a href={host + '/app/' + listingInfo._id} target='_blank' rel="noopener noreferrer">
 							<Button block className="my-2" icon="tool" size="large" type="primary">Study Monitor</Button><br />
 						</a>}
+						<Link to={`/leads/${listingInfo.listingType}/${listingInfo._id}`}><Button block className="my-2" icon="monitor" size="large" type="primary">Leads</Button></Link><br />
 						<a href={'https://eduatlas.com/' + listingInfo.listingType + '/' + listingInfo._id} target='_blank' rel="noopener noreferrer">
 							<Button block className="my-2" icon="eye" size="large" type="primary">View Listing</Button>
 						</a><br />

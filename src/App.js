@@ -12,6 +12,7 @@ import './core/css/material-kit.css';
 import AddOrEditEvent from './components/AddOrEditEvent';
 import AddOrEditTuition from './components/AddOrEditTuition';
 import ErpManager from './components/ErpManager';
+import Leads from './components/Leads';
 import Loading from './components/Loading';
 import Login from './components/Login';
 import Navbar from './components/Navbar';
@@ -53,6 +54,7 @@ class App extends Component {
 							<Route exact path="/signup" component={Signup}></Route>
 							<Route exact path="/edit-tuition/:tuitionId" render={() => <AddOrEditTuition edit={true} />}></Route>
 							<Route exact path="/edit-event/:eventId" render={() => <AddOrEditEvent edit={true} />}></Route>
+							<Route exact path="/leads/:listingType/:listingId" render={() => <Leads />}></Route>
 						</Switch>
 					</>
 				</Router>
