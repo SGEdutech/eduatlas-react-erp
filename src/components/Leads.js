@@ -18,7 +18,7 @@ const { TabPane } = Tabs;
 
 const badgeColor = { backgroundColor: '#00bcd4' };
 const colLayout = {
-	xs: 24, nd: 12, lg: 8
+	xs: 24, md: 12, lg: 8
 };
 
 class Leads extends Component {
@@ -77,29 +77,29 @@ class Leads extends Component {
 
 		return (
 			<div className="container">
-				<Tabs className="border p-2" tabPosition={this.state.tabPosition}>
-					<TabPane tab={<>New Leads<Badge count={newLeads.length} style={badgeColor}></Badge></>} key="1">
+				<Tabs className="border p-2 mb-5" tabPosition={this.state.tabPosition}>
+					<TabPane tab={<>New Leads<Badge className="ml-1" count={newLeads.length} style={badgeColor}></Badge></>} key="1">
 						<Row gutter={16}>
 							{newLeads.length === 0 ? emptyJsx :
 								newLeads.map(leadInfo => {
-									return <Col key={leadInfo._id} {...colLayout}>
+									return <Col className="p-2" key={leadInfo._id} {...colLayout}>
 										<NewLeadCard leadInfo={leadInfo} updateLeads={this.updateLeads} />
 									</Col>;
 								})}
 						</Row>
 					</TabPane>
-					<TabPane tab={<>Follow Ups<Badge count={followUpLeads.length} style={badgeColor}></Badge></>} key="2">
+					<TabPane tab={<>Follow Ups<Badge className="ml-1" count={followUpLeads.length} style={badgeColor}></Badge></>} key="2">
 						{followUpLeads.length === 0 ? emptyJsx :
 							followUpLeads.map(leadInfo => {
-								return <Col key={leadInfo._id} {...colLayout}>
+								return <Col className="p-2" key={leadInfo._id} {...colLayout}>
 									<NewLeadCard leadInfo={leadInfo} updateLeads={this.updateLeads} />
 								</Col>;
 							})}
 					</TabPane>
-					<TabPane tab={<>Closed<Badge count={closedLeads.length} style={badgeColor}></Badge></>} key="3">
+					<TabPane tab={<>Closed<Badge className="ml-1" count={closedLeads.length} style={badgeColor}></Badge></>} key="3">
 						{closedLeads.length === 0 ? emptyJsx :
 							closedLeads.map(leadInfo => {
-								return <Col key={leadInfo._id} {...colLayout}>
+								return <Col className="p-2" key={leadInfo._id} {...colLayout}>
 									<NewLeadCard leadInfo={leadInfo} updateLeads={this.updateLeads} />
 								</Col>;
 							})}
@@ -110,5 +110,6 @@ class Leads extends Component {
 	}
 }
 
+// FIXME: memory leak: check wearnings
 export default withRouter(Leads);
 
