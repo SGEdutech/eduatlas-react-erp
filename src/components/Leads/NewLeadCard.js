@@ -17,7 +17,8 @@ import {
 	message,
 	Modal,
 	Row,
-	Select
+	Select,
+	Divider
 } from 'antd';
 const { TextArea } = Input;
 const Option = Select.Option;
@@ -58,6 +59,7 @@ class NewLeadCard extends Component {
 			const { data: updatedLead } = await axios.put(`${host}/${listingType}/${listingId}/lead/${leadInfo._id}`, values);
 			updateLeads(updatedLead);
 			hideLoadingMessage();
+			this.handleRespondLeadCancel();
 			message.success('Lead updated successfully!');
 		} catch (error) {
 			console.error(error);
@@ -73,6 +75,7 @@ class NewLeadCard extends Component {
 			const { data: updatedLead } = await axios.post(`${host}/${listingType}/${listingId}/lead/${leadInfo._id}/comment`, values);
 			updateLeads(updatedLead);
 			hideLoadingMessage();
+			this.handleRespondLeadCancel();
 			message.success('Lead updated successfully!');
 		} catch (error) {
 			console.error(error);
@@ -136,6 +139,7 @@ class NewLeadCard extends Component {
 							</li>
 						)}
 					/>
+					<Divider orientation="left">Input Fields</Divider>
 					<Form>
 						<Row gutter={16}>
 							<Col {...colLayout}>
