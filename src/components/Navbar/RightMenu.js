@@ -38,7 +38,7 @@ class RightMenu extends Component {
 		) : (
 				<SubMenu title={<span><Icon style={{ fontSize: 20 }} type="user" />{userInfo.firstName.substr(0, 16)}</span>}>
 					<Menu.Item key="setting:1"><Link to="/dashboard">Dashboard</Link></Menu.Item>
-					<Menu.Item key="setting:2"><a href={eduatlasAddress} target='_blank' rel="noopener noreferrer">Switch Role</a></Menu.Item>
+					<Menu.Item key="setting:2"><a href={eduatlasAddress} target='_blank' rel="noopener noreferrer">Go to listing platform</a></Menu.Item>
 					<Menu.Item key="setting:3" onClick={this.handleLogoutClick}>Logout</Menu.Item>
 				</SubMenu>
 			);
