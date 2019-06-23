@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { host, eduatlas as eduatlasAddress } from '../config.json';
 
 import NewLeadCard from './Leads/NewLeadCard';
+import NewLeads from './Leads/NewLeads';
 
 import {
 	Badge,
@@ -36,6 +37,14 @@ class Leads extends Component {
 			message.error('There was a problem connecting with the server!');
 			console.error(error);
 		}
+	}
+
+	addLeads = addedLead => {
+		this.setState(prevState => {
+			const { listingInfo } = prevState;
+			listingInfo.leads.push(addedLead);
+			return { listingInfo: { ...listingInfo } };
+		});
 	}
 
 	updateLeads = updatedLead => {
@@ -79,14 +88,7 @@ class Leads extends Component {
 			<div className="container">
 				<Tabs className="border p-2 mb-5" tabPosition={this.state.tabPosition}>
 					<TabPane tab={<>New Leads<Badge className="ml-1" count={newLeads.length} style={badgeColor}></Badge></>} key="1">
-						<Row gutter={16}>
-							{newLeads.length === 0 ? emptyJsx :
-								newLeads.map(leadInfo => {
-									return <Col className="p-2" key={leadInfo._id} {...colLayout}>
-										<NewLeadCard leadInfo={leadInfo} updateLeads={this.updateLeads} />
-									</Col>;
-								})}
-						</Row>
+						<NewLeads addLeads={this.addLeads} colLayout={colLayout} emptyJsx={emptyJsx} newLeads={newLeads} />
 					</TabPane>
 					<TabPane tab={<>Follow Ups<Badge className="ml-1" count={followUpLeads.length} style={badgeColor}></Badge></>} key="2">
 						{followUpLeads.length === 0 ? emptyJsx :
