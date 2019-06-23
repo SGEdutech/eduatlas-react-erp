@@ -133,7 +133,7 @@ class NewLeads extends Component {
 							</Col>
 							<Col {...modalColLayout}>
 								<Form.Item
-									label="Message from Student/Parent"
+									label="Query from Student/Parent"
 									hasFeedback={true}>
 									{getFieldDecorator('message', {
 										rules: [{

@@ -92,20 +92,29 @@ class NewLeadCard extends Component {
 				<Card
 					actions={[<span onClick={this.handleRespondLeadBtnClick}>Respond</span>]}
 				>
-					<Row>
-						{leadInfo.message}
-					</Row>
-					<Row justify="end" type="flex">
-						<small>{moment(leadInfo.createdAt).format('LLL')}</small>
-					</Row>
-					<Row className="text-secondary">
-						<small>{leadInfo.name}</small>
+					{Boolean(leadInfo.nextFollowUp) && leadInfo.status === 'active' &&
+						<>
+							<Row >
+								<small>Next Follow-up: {moment(leadInfo.nextFollowUp).format('MMM Do YY')}</small>
+							</Row>
+							<Divider className="my-2" />
+						</>
+					}
+					<Row >
+						{leadInfo.name}
 					</Row>
 					<Row className="text-secondary">
 						<small>{leadInfo.phone}</small>
 					</Row>
 					<Row className="text-secondary">
 						<small>{leadInfo.email}</small>
+					</Row>
+					<Row>
+						<small>{moment(leadInfo.createdAt).format('LLL')}</small>
+					</Row>
+					<Divider className="my-2" />
+					<Row className="one-line-ellipsis">
+						{leadInfo.message}
 					</Row>
 				</Card>
 				{/* Respond to lead Modal */}
@@ -116,6 +125,7 @@ class NewLeadCard extends Component {
 					onOk={this.handleModalConfirm}
 					title='Respond to lead'
 					visible={showRespondModal}>
+					<Divider className="mt-0 mb-2" orientation="left">Contact Info</Divider>
 					<Row className="text-secondary">
 						<small>{leadInfo.name}</small>
 					</Row>
@@ -125,9 +135,17 @@ class NewLeadCard extends Component {
 					<Row className="text-secondary">
 						<small>{leadInfo.email}</small>
 					</Row>
+					<Row className="text-secondary">
+						<small>Lead Date: {moment(leadInfo.createdAt).format('LLL')}</small>
+					</Row>
+					<Divider className="my-2" orientation="left">Query</Divider>
+					<Row>
+						<small>{leadInfo.message}</small>
+					</Row>
+					<Divider className="my-2" orientation="left">Communication Log</Divider>
 					<List
 						className="comment-list"
-						header={`${leadInfo.comments.length} comments`}
+						// header={`${leadInfo.comments.length} comments`}
 						itemLayout="horizontal"
 						dataSource={leadInfo.comments}
 						renderItem={comment => (
@@ -139,7 +157,7 @@ class NewLeadCard extends Component {
 							</li>
 						)}
 					/>
-					<Divider orientation="left">Input Fields</Divider>
+					<Divider orientation="left">New Comment</Divider>
 					<Form>
 						<Row gutter={16}>
 							<Col {...colLayout}>
