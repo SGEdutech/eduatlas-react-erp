@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 
 import { host, eduatlas as eduatlasAddress } from '../config.json';
 
+import FollowUpLeads from './Leads/FollowUpLeads';
 import NewLeadCard from './Leads/NewLeadCard';
 import NewLeads from './Leads/NewLeads';
 
@@ -12,7 +13,6 @@ import {
 	Col,
 	Empty,
 	message,
-	Row,
 	Tabs
 } from 'antd';
 const { TabPane } = Tabs;
@@ -91,12 +91,7 @@ class Leads extends Component {
 						<NewLeads addLeads={this.addLeads} colLayout={colLayout} emptyJsx={emptyJsx} newLeads={newLeads} />
 					</TabPane>
 					<TabPane tab={<>Follow Ups<Badge className="ml-1" count={followUpLeads.length} style={badgeColor}></Badge></>} key="2">
-						{followUpLeads.length === 0 ? emptyJsx :
-							followUpLeads.map(leadInfo => {
-								return <Col className="p-2" key={leadInfo._id} {...colLayout}>
-									<NewLeadCard leadInfo={leadInfo} updateLeads={this.updateLeads} />
-								</Col>;
-							})}
+						<FollowUpLeads colLayout={colLayout} emptyJsx={emptyJsx} followUpLeads={followUpLeads} />
 					</TabPane>
 					<TabPane tab={<>Closed<Badge className="ml-1" count={closedLeads.length} style={badgeColor}></Badge></>} key="3">
 						{closedLeads.length === 0 ? emptyJsx :
