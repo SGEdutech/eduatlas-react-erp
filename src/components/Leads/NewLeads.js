@@ -16,10 +16,12 @@ import {
 	InputNumber,
 	message,
 	Modal,
-	Row
+	Row,
+	Select
 } from 'antd';
 const Meta = Card.Meta;
 const { TextArea } = Input;
+const { Option } = Select;
 
 const modalColLayout = {
 	xs: 24
@@ -85,7 +87,7 @@ class NewLeads extends Component {
 		}
 	}
 	render() {
-		const { colLayout, emptyJsx, form } = this.props;
+		const { colLayout, emptyJsx, form, updateLeads } = this.props;
 		const { showRespondModal } = this.state;
 		const { getFieldDecorator } = form;
 		const newLeads = this.getFilteredLeads();
@@ -109,7 +111,7 @@ class NewLeads extends Component {
 				>
 					<Meta
 						description={
-							<Row align="middle" justify="center" type="flex">Add Leads</Row>
+							<Row align="middle" justify="center" type="flex">Add Lead</Row>
 						}
 					/>
 				</Card>
@@ -117,7 +119,7 @@ class NewLeads extends Component {
 					{newLeads.length === 0 ? emptyJsx :
 						newLeads.map(leadInfo => {
 							return <Col className="p-2" key={leadInfo._id} {...colLayout}>
-								<NewLeadCard leadInfo={leadInfo} updateLeads={this.updateLeads} />
+								<NewLeadCard leadInfo={leadInfo} updateLeads={updateLeads} />
 							</Col>;
 						})}
 				</Row>
@@ -127,7 +129,7 @@ class NewLeads extends Component {
 					okText='Add'
 					onCancel={this.handleAddLeadCancel}
 					onOk={this.handleModalConfirm}
-					title='Add leads'
+					title='Add lead'
 					visible={showRespondModal}>
 					<Form>
 						<Row gutter={16}>
@@ -180,6 +182,28 @@ class NewLeads extends Component {
 										}]
 									})(
 										<TextArea rows={4} />
+									)}
+								</Form.Item>
+							</Col>
+							<Col {...modalColLayout}>
+								<Form.Item
+									label="Lead Source"
+									hasFeedback={true}>
+									{getFieldDecorator('source')(
+										<Input />
+									)}
+								</Form.Item>
+							</Col>
+							<Col {...modalColLayout}>
+								<Form.Item
+									label="Lead Strength"
+									hasFeedback={true}>
+									{getFieldDecorator('leadStrength')(
+										<Select>
+											<Option value="hot">Hot</Option>
+											<Option value="warm">Warm</Option>
+											<Option value="cold">Cold</Option>
+										</Select>
 									)}
 								</Form.Item>
 							</Col>

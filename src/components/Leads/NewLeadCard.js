@@ -174,9 +174,35 @@ class NewLeadCard extends Component {
 									label="Next Follow-Up Date"
 									hasFeedback={true}>
 									{getFieldDecorator('nextFollowUp', {
-										initialValue: moment(leadInfo.nextFollowUp)
+										initialValue: leadInfo.nextFollowUp ? moment(leadInfo.nextFollowUp): undefined
 									})(
 										<DatePicker className="w-100" format='LLL' showTime use12Hours />
+									)}
+								</Form.Item>
+							</Col>
+							<Col {...colLayout}>
+								<Form.Item
+									label="Lead Source"
+									hasFeedback={true}>
+									{getFieldDecorator('source', {
+										initialValue: leadInfo.source
+									})(
+										<Input />
+									)}
+								</Form.Item>
+							</Col>
+							<Col {...colLayout}>
+								<Form.Item
+									label="Lead Strength"
+									hasFeedback={true}>
+									{getFieldDecorator('leadStrength', {
+										initialValue: leadInfo.leadStrength
+									})(
+										<Select>
+											<Option value="hot">Hot</Option>
+											<Option value="warm">Warm</Option>
+											<Option value="cold">Cold</Option>
+										</Select>
 									)}
 								</Form.Item>
 							</Col>

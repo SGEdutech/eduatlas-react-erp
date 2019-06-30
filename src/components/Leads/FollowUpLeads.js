@@ -40,7 +40,7 @@ class FollowUpLeads extends Component {
 	handleSearchChange = ({ currentTarget: { value: searchQuery } }) => this.setState({ searchQuery });
 	handleToDateChange = toDate => this.setState({ toDate });
 	render() {
-		const { colLayout, emptyJsx } = this.props;
+		const { colLayout, emptyJsx, updateLeads } = this.props;
 		const followUpLeads = this.getFilteredLeads();
 		return (
 			<>
@@ -59,7 +59,7 @@ class FollowUpLeads extends Component {
 					{followUpLeads.length === 0 ? emptyJsx :
 						followUpLeads.map(leadInfo => {
 							return <Col className="p-2" key={leadInfo._id} {...colLayout}>
-								<NewLeadCard leadInfo={leadInfo} updateLeads={this.updateLeads} />
+								<NewLeadCard leadInfo={leadInfo} updateLeads={updateLeads} />
 							</Col>;
 						})}
 				</Row>

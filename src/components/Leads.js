@@ -94,10 +94,10 @@ class Leads extends Component {
 			<div className="container">
 				<Tabs className="border p-2 mb-5" tabPosition={this.state.tabPosition}>
 					<TabPane tab={<>New Leads<Badge className="ml-1" count={newLeads.length} style={badgeColor}></Badge></>} key="1">
-						<NewLeads addLeads={this.addLeads} colLayout={colLayout} emptyJsx={emptyJsx} newLeads={newLeads} />
+						<NewLeads addLeads={this.addLeads} colLayout={colLayout} emptyJsx={emptyJsx} newLeads={newLeads} updateLeads={this.updateLeads} />
 					</TabPane>
 					<TabPane tab={<>Follow Ups<Badge className="ml-1" count={followUpLeads.length} style={badgeColor}></Badge></>} key="2">
-						<FollowUpLeads colLayout={colLayout} emptyJsx={emptyJsx} followUpLeads={followUpLeads} />
+						<FollowUpLeads colLayout={colLayout} emptyJsx={emptyJsx} followUpLeads={followUpLeads} updateLeads={this.updateLeads} />
 					</TabPane>
 					<TabPane tab={<>Closed<Badge className="ml-1" count={closedLeads.length} style={badgeColor}></Badge></>} key="3">
 						{closedLeads.length === 0 ? emptyJsx :
