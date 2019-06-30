@@ -2,8 +2,9 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
-import { host, eduatlas as eduatlasAddress } from '../config.json';
+import { host } from '../config.json';
 
+import ExcelLeadUpload from './Leads/ExcelLeadUpload';
 import FollowUpLeads from './Leads/FollowUpLeads';
 import NewLeadCard from './Leads/NewLeadCard';
 import NewLeads from './Leads/NewLeads';
@@ -42,7 +43,12 @@ class Leads extends Component {
 	addLeads = addedLead => {
 		this.setState(prevState => {
 			const { listingInfo } = prevState;
-			listingInfo.leads.push(addedLead);
+			// TODO: test if-else block
+			if (Array.isArray(addedLead)) {
+				listingInfo.leads = [...listingInfo.leads, ...addedLead];
+			} else {
+				listingInfo.leads.push(addedLead);
+			}
 			return { listingInfo: { ...listingInfo } };
 		});
 	}
@@ -100,6 +106,9 @@ class Leads extends Component {
 									<NewLeadCard leadInfo={leadInfo} updateLeads={this.updateLeads} />
 								</Col>;
 							})}
+					</TabPane>
+					<TabPane tab={<>Excel Upload</>} key="4">
+						<ExcelLeadUpload addLeads={this.addLeads} />
 					</TabPane>
 				</Tabs>
 			</div>

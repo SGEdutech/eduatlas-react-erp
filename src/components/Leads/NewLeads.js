@@ -31,7 +31,7 @@ const filterColLayout = {
 
 class NewLeads extends Component {
 	state = {
-		fromDate: moment(),
+		fromDate: null,
 		searchQuery: null,
 		showRespondModal: false,
 		toDate: null
@@ -96,7 +96,7 @@ class NewLeads extends Component {
 						<Input onChange={this.handleSearchChange} placeholder="Search" allowClear />
 					</Col>
 					<Col {...filterColLayout} className="p-1">
-						<DatePicker allowClear className="w-100" defaultValue={moment()} format="DD-MM-YYYY" onChange={this.handleFromDateChange} placeholder="From Date" />
+						<DatePicker allowClear className="w-100" format="DD-MM-YYYY" onChange={this.handleFromDateChange} placeholder="From Date" />
 					</Col>
 					<Col {...filterColLayout} className="p-1">
 						<DatePicker allowClear className="w-100" format="DD-MM-YYYY" onChange={this.handleToDateChange} placeholder="To Date" />

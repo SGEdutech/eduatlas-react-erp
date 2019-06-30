@@ -17,7 +17,7 @@ const filterColLayout = {
 
 class FollowUpLeads extends Component {
 	state = {
-		fromDate: moment(),
+		fromDate: null,
 		searchQuery: null,
 		toDate: null
 	}
@@ -49,18 +49,20 @@ class FollowUpLeads extends Component {
 						<Input onChange={this.handleSearchChange} placeholder="Search" allowClear />
 					</Col>
 					<Col {...filterColLayout} className="p-1">
-						<DatePicker allowClear className="w-100" defaultValue={moment()} format="DD-MM-YYYY" onChange={this.handleFromDateChange} placeholder="From Follow-Up Date" />
+						<DatePicker allowClear className="w-100" format="DD-MM-YYYY" onChange={this.handleFromDateChange} placeholder="From Follow-Up Date" />
 					</Col>
 					<Col {...filterColLayout} className="p-1">
 						<DatePicker allowClear className="w-100" format="DD-MM-YYYY" onChange={this.handleToDateChange} placeholder="To Follow-Up Date" />
 					</Col>
 				</Row>
-				{followUpLeads.length === 0 ? emptyJsx :
-					followUpLeads.map(leadInfo => {
-						return <Col className="p-2" key={leadInfo._id} {...colLayout}>
-							<NewLeadCard leadInfo={leadInfo} updateLeads={this.updateLeads} />
-						</Col>;
-					})}
+				<Row gutter={16}>
+					{followUpLeads.length === 0 ? emptyJsx :
+						followUpLeads.map(leadInfo => {
+							return <Col className="p-2" key={leadInfo._id} {...colLayout}>
+								<NewLeadCard leadInfo={leadInfo} updateLeads={this.updateLeads} />
+							</Col>;
+						})}
+				</Row>
 			</>
 		);
 	}
