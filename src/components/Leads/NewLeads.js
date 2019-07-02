@@ -190,7 +190,19 @@ class NewLeads extends Component {
 									label="Lead Source"
 									hasFeedback={true}>
 									{getFieldDecorator('source')(
-										<Input />
+										<Select>
+											<Option value="eduatlas.com">Eduatlas.com</Option>
+											<Option value="school campaign">School Campaign</Option>
+											<Option value="pamphlets">Pamphlets</Option>
+											<Option value="facebook">Facebook</Option>
+											<Option value="walkin">Walk-In</Option>
+											<Option value="sulekha">Sulekha</Option>
+											<Option value="justdial">JustDial</Option>
+											<Option value="urbanpro">UrbanPro</Option>
+											<Option value="shiksha">Shiksha</Option>
+											<Option value="google maps">Google Maps</Option>
+											<Option value="other">Other</Option>
+										</Select>
 									)}
 								</Form.Item>
 							</Col>

@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 
 import { host } from '../config.json';
 
+import ExcelLeadDownload from './Leads/ExcelLeadDownload';
 import ExcelLeadUpload from './Leads/ExcelLeadUpload';
 import FollowUpLeads from './Leads/FollowUpLeads';
 import NewLeadCard from './Leads/NewLeadCard';
@@ -76,7 +77,7 @@ class Leads extends Component {
 		const closedLeads = [];
 		if (listingInfo) {
 			listingInfo.leads.forEach(leadInfo => {
-				if (leadInfo.comments.length === 0) {
+				if (leadInfo.comments.length === 0 && leadInfo.status === 'active') {
 					newLeads.push(leadInfo);
 				} else if (leadInfo.status === 'closed' || leadInfo.status === 'enrolled') {
 					closedLeads.push(leadInfo);
@@ -85,7 +86,6 @@ class Leads extends Component {
 				}
 			});
 		}
-
 		const emptyJsx = <Empty className="mt-4"
 			image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
 			description={<span>Nothing is better than something...</span>}></Empty>;
@@ -109,6 +109,9 @@ class Leads extends Component {
 					</TabPane>
 					<TabPane tab={<>Excel Upload</>} key="4">
 						<ExcelLeadUpload addLeads={this.addLeads} />
+					</TabPane>
+					<TabPane tab={<>Excel Download</>} key="5">
+						<ExcelLeadDownload colLayout={colLayout} emptyJsx={emptyJsx} leads={listingInfo ? listingInfo.leads : []} />
 					</TabPane>
 				</Tabs>
 			</div>

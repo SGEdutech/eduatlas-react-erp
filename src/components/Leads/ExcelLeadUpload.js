@@ -25,7 +25,7 @@ class ExcelLeadUpload extends Component {
 		const { addLeads, match: { params: { listingId, listingType } } } = this.props;
 		const hideLoadingMessage = message.loading('Action in progress..', 0);
 		try {
-			const { data: addedLead } = await axios.post(`${host}/${listingType}/${listingId}/leads`, values);
+			const { data: addedLead } = await axios.post(`${host}/${listingType}/${listingId}/lead/multiple`, { leads: values });
 			addLeads(addedLead);
 			hideLoadingMessage();
 			message.success('Leads added successfully!');

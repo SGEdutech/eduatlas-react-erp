@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import moment from 'moment';
 
 import sanatizeFormObj from '../../scripts/sanatize-form-obj';
-import { host, eduatlas as eduatlasAddress } from '../../config.json';
+import { host } from '../../config.json';
 
 import {
 	Card,
@@ -92,14 +92,12 @@ class NewLeadCard extends Component {
 				<Card
 					actions={[<span onClick={this.handleRespondLeadBtnClick}>Respond</span>]}
 				>
-					{Boolean(leadInfo.nextFollowUp) && leadInfo.status === 'active' &&
-						<>
-							<Row >
-								<small>Next Follow-up: {moment(leadInfo.nextFollowUp).format('MMM Do YY')}</small>
-							</Row>
-							<Divider className="my-2" />
-						</>
-					}
+					<>
+						<Row >
+							<small>Next Follow-up: {leadInfo.nextFollowUp ? moment(leadInfo.nextFollowUp).format('MMM Do YY') : 'NA'}</small>
+						</Row>
+						<Divider className="my-2" />
+					</>
 					<Row >
 						{leadInfo.name}
 					</Row>
@@ -174,7 +172,7 @@ class NewLeadCard extends Component {
 									label="Next Follow-Up Date"
 									hasFeedback={true}>
 									{getFieldDecorator('nextFollowUp', {
-										initialValue: leadInfo.nextFollowUp ? moment(leadInfo.nextFollowUp): undefined
+										initialValue: leadInfo.nextFollowUp ? moment(leadInfo.nextFollowUp) : undefined
 									})(
 										<DatePicker className="w-100" format='LLL' showTime use12Hours />
 									)}
@@ -187,7 +185,19 @@ class NewLeadCard extends Component {
 									{getFieldDecorator('source', {
 										initialValue: leadInfo.source
 									})(
-										<Input />
+										<Select>
+											<Option value="eduatlas.com">Eduatlas.com</Option>
+											<Option value="school campaign">School Campaign</Option>
+											<Option value="pamphlets">Pamphlets</Option>
+											<Option value="facebook">Facebook</Option>
+											<Option value="walkin">Walk-In</Option>
+											<Option value="sulekha">Sulekha</Option>
+											<Option value="justdial">JustDial</Option>
+											<Option value="urbanpro">UrbanPro</Option>
+											<Option value="shiksha">Shiksha</Option>
+											<Option value="google maps">Google Maps</Option>
+											<Option value="other">Other</Option>
+										</Select>
 									)}
 								</Form.Item>
 							</Col>
