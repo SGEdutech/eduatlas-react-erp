@@ -7,6 +7,7 @@ import sanatizeFormObj from '../../scripts/sanatize-form-obj';
 import { host } from '../../config.json';
 
 import {
+	Badge,
 	Card,
 	Col,
 	Comment,
@@ -26,6 +27,13 @@ const Option = Select.Option;
 const colLayout = {
 	xs: 24
 };
+
+const newCardStyle = { background: 'white', color: 'black' };
+const hotCardStyle = { background: '#e6615a', color: 'black' };
+const warmCardStyle = { background: '#ffe51d', color: 'black' };
+const coldCardStyle = { background: '#00afef', color: 'black' };
+const enrolledCardStyle = { background: '#00a859', color: 'black' };
+const closedCardStyle = { background: 'grey', color: 'black' };
 
 class NewLeadCard extends Component {
 	state = {
@@ -83,6 +91,44 @@ class NewLeadCard extends Component {
 			message.error('There was some problem with server!');
 		}
 	}
+
+	getCardStyle = () => {
+		const cardStyle = { style: newCardStyle, badgeText: 'New' };
+		const { leadInfo } = this.props;
+		if (leadInfo.status === 'active') {
+			switch (leadInfo.leadStrength) {
+				case 'hot':
+					cardStyle.style = hotCardStyle;
+					cardStyle.badgeText = 'Hot';
+					break;
+				case 'warm':
+					cardStyle.style = warmCardStyle;
+					cardStyle.badgeText = 'Warm';
+					break;
+				case 'cold':
+					cardStyle.style = coldCardStyle;
+					cardStyle.badgeText = 'Cold';
+					break;
+				default:
+					break;
+			}
+		} else {
+			switch (leadInfo.status) {
+				case 'closed':
+					cardStyle.style = closedCardStyle;
+					cardStyle.badgeText = 'Closed';
+					break;
+				case 'enrolled':
+					cardStyle.style = enrolledCardStyle;
+					cardStyle.badgeText = 'Enrolled';
+					break;
+				default:
+					break;
+			}
+		}
+		return cardStyle;
+	}
+
 	render() {
 		const { leadInfo, form } = this.props;
 		const { getFieldDecorator } = form;
@@ -91,28 +137,41 @@ class NewLeadCard extends Component {
 			<>
 				<Card
 					actions={[<span onClick={this.handleRespondLeadBtnClick}>Respond</span>]}
+					extra={<Badge style={this.getCardStyle().style} count={this.getCardStyle().badgeText} />}
+					headStyle={this.getCardStyle().style}
+					size="small"
+					title={<small className="text-dark">Next Follow-up: {leadInfo.nextFollowUp ? moment(leadInfo.nextFollowUp).format('MMM Do YY') : 'NA'}</small>}
 				>
-					<>
-						<Row >
-							<small>Next Follow-up: {leadInfo.nextFollowUp ? moment(leadInfo.nextFollowUp).format('MMM Do YY') : 'NA'}</small>
-						</Row>
-						<Divider className="my-2" />
-					</>
 					<Row >
-						{leadInfo.name}
+						<Col span={8}>Name: </Col>
+						<Col className="one-line-ellipsis" span={16}>
+							{leadInfo.name}
+						</Col>
 					</Row>
 					<Row className="text-secondary">
-						<small>{leadInfo.phone}</small>
+						<Col span={8}><small>Phone:</small> </Col>
+						<Col className="one-line-ellipsis" span={16}>
+							<small>{leadInfo.phone}</small>
+						</Col>
 					</Row>
 					<Row className="text-secondary">
-						<small>{leadInfo.email}</small>
+						<Col span={8}><small>Product:</small> </Col>
+						<Col className="one-line-ellipsis" span={16}>
+							{<small>{leadInfo.email}</small>}
+						</Col>
 					</Row>
 					<Row>
-						<small>{moment(leadInfo.createdAt).format('LLL')}</small>
+						<Col span={8}><small>Date:</small> </Col>
+						<Col span={16}>
+							<small>{moment(leadInfo.createdAt).format('LLL')}</small>
+						</Col>
 					</Row>
 					<Divider className="my-2" />
-					<Row className="one-line-ellipsis">
-						{leadInfo.message}
+					<Row>
+						<Col span={8}><small>Query:</small> </Col>
+						<Col className="one-line-ellipsis" span={16}>
+							<small>{leadInfo.message}</small>
+						</Col>
 					</Row>
 				</Card>
 				{/* Respond to lead Modal */}
