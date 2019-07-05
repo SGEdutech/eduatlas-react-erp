@@ -1,4 +1,5 @@
 import axios from 'axios';
+import moment from 'moment';
 import React, { Component } from 'react';
 import { parse } from 'papaparse';
 import { withRouter } from 'react-router-dom';
@@ -45,7 +46,11 @@ class ExcelLeadUpload extends Component {
 				name: lead['Name'],
 				phone: parseInt(lead['Phone']),
 				message: lead['Query'],
-				source: lead['Source']
+				source: lead['Source'],
+				leadStrength: lead['Strength'],
+				status: lead['Status'],
+				createdAt: moment(lead['Date'], ['DD/MM/YY', 'DD/MM/YYYY']),
+				nextFollowUp: moment(lead['Next Follow-Up Date'], ['DD/MM/YY', 'DD/MM/YYYY'])
 			};
 			return studentObj;
 		});
@@ -87,41 +92,27 @@ class ExcelLeadUpload extends Component {
 		notification.error({
 			description: message,
 			duration: 0,
-			message: 'Student can\'t be added'
+			message: 'Lead can\'t be added'
 		});
 	}
 
 	validateAndAddLeads = leadDataJson => {
-		const { match: { params: { listingId, listingType } } } = this.props;
-		console.log(leadDataJson)
 		const isValid = this.validateLeadsData(leadDataJson);
 		if (isValid === false) return;
 		// Reordering every lead to send to database
 		const leadObjs = this.getLeadObjects(leadDataJson);
-		console.log(leadObjs)
 		this.addLeads(leadObjs);
 		this.setState({ selectedFile: null, selectedFileList: [] });
 	}
 
-	validateEmail = leadsData => {
+	validateDate = leadsData => {
 		let isValid = true;
 		leadsData.forEach((leadData, index) => {
-			// regex for validating email
-			const isEmailValid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(leadData['E-Mail']);
-			if (isEmailValid === false) {
-				this.showErrorMessage(`Email at row ${index + 2} is not valid`);
-				isValid = false;
-			}
-		});
-		return isValid;
-	}
-
-	validatePhoneNumber = leadsData => {
-		let isValid = true;
-		leadsData.forEach((leadData, index) => {
-			const isPhoneNumberValid = Boolean(leadData['Phone'].length <= 12);
-			if (isPhoneNumberValid === false) {
-				this.showErrorMessage(`Phone Number at row ${index + 2} is not valid, use only numbers`);
+			// regex for validating DD/MM/YYYY
+			const dateRegex = /^(\d{2})\/(\d{2})\/(\d{2,4})$/;
+			const isDateValid = dateRegex.test(leadData['Date']);
+			if (isDateValid === false) {
+				this.showErrorMessage(`Date at row ${index + 2} is not valid. Valid format is: DD/MM/YYYY`);
 				isValid = false;
 			}
 		});
@@ -140,11 +131,27 @@ class ExcelLeadUpload extends Component {
 		return isValid;
 	}
 
-	validateRequiredFields = leadsData => {
+	validateEmail = leadsData => {
 		let isValid = true;
 		leadsData.forEach((leadData, index) => {
-			if (Boolean(leadData['Name']) === false || Boolean(leadData['Phone']) === false) {
-				this.showErrorMessage(`Lead data at row ${index + 2} is missing some compulsary field(s)!`);
+			// regex for validating email
+			const isEmailValid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(leadData['E-Mail']);
+			if (isEmailValid === false) {
+				this.showErrorMessage(`Email at row ${index + 2} is not valid`);
+				isValid = false;
+			}
+		});
+		return isValid;
+	}
+
+	validateFollowUpDate = leadsData => {
+		let isValid = true;
+		leadsData.forEach((leadData, index) => {
+			// regex for validating DD/MM/YYYY
+			const dateRegex = /^(\d{2})\/(\d{2})\/(\d{2,4})$/;
+			const isDateValid = dateRegex.test(leadData['Next Follow-Up Date']);
+			if (isDateValid === false) {
+				this.showErrorMessage(`Next Follow-Up Date at row ${index + 2} is not valid. Valid format is: DD/MM/YYYY`);
 				isValid = false;
 			}
 		});
@@ -156,8 +163,138 @@ class ExcelLeadUpload extends Component {
 		const isAnyEntryDuplicate = this.validateDuplicateEntries(leadsData);
 		const areRequiredFieldsValid = this.validateRequiredFields(leadsData);
 		const arePhoneNumberValid = this.validatePhoneNumber(leadsData);
+		const areSourceValid = this.validateLeadSource(leadsData);
+		const areStrengthValid = this.validateLeadStrength(leadsData);
+		const areStatusValid = this.validateLeadStatus(leadsData);
 		const areEmailValid = this.validateEmail(leadsData);
-		return isAnyEntryDuplicate && areRequiredFieldsValid && arePhoneNumberValid && areEmailValid;
+		const areDatesValid = this.validateDate(leadsData);
+		const areFollowUpDatesValid = this.validateFollowUpDate(leadsData);
+		return isAnyEntryDuplicate && areRequiredFieldsValid && arePhoneNumberValid && areSourceValid && areStrengthValid && areStatusValid && areEmailValid && areDatesValid && areFollowUpDatesValid;
+	}
+
+	validateLeadSource = leadsData => {
+		let isValid = true;
+		leadsData.forEach((leadData, index) => {
+			let isLeadSourceValid;
+			switch (leadData['Source']) {
+				case 'eduatlas.com':
+					isLeadSourceValid = true;
+					break;
+				case 'school campaign':
+					isLeadSourceValid = true;
+					break;
+				case 'pamphlets':
+					isLeadSourceValid = true;
+					break;
+				case 'facebook':
+					isLeadSourceValid = true;
+					break;
+				case 'walkin':
+					isLeadSourceValid = true;
+					break;
+				case 'sulekha':
+					isLeadSourceValid = true;
+					break;
+				case 'justdial':
+					isLeadSourceValid = true;
+					break;
+				case 'upbanpro':
+					isLeadSourceValid = true;
+					break;
+				case 'shiksha':
+					isLeadSourceValid = true;
+					break;
+				case 'google maps':
+					isLeadSourceValid = true;
+					break;
+				case 'other':
+					isLeadSourceValid = true;
+					break;
+				default:
+					isLeadSourceValid = false;
+					break;
+			}
+			if (isLeadSourceValid === false) {
+				this.showErrorMessage(`Source at row ${index + 2} is not valid, refer to valid source options`);
+				isValid = false;
+			}
+		});
+		return isValid;
+	}
+
+	validateLeadStatus = leadsData => {
+		let isValid = true;
+		leadsData.forEach((leadData, index) => {
+			let isLeadStatusValid;
+			switch (leadData['Status']) {
+				case 'active':
+					isLeadStatusValid = true;
+					break;
+				case 'enrolled':
+					isLeadStatusValid = true;
+					break;
+				case 'closed':
+					isLeadStatusValid = true;
+					break;
+				default:
+					isLeadStatusValid = false;
+					break;
+			}
+			if (isLeadStatusValid === false) {
+				this.showErrorMessage(`Status at row ${index + 2} is not valid, valid options are: active, enrolled, closed`);
+				isValid = false;
+			}
+		});
+		return isValid;
+	}
+
+	validateLeadStrength = leadsData => {
+		let isValid = true;
+		leadsData.forEach((leadData, index) => {
+			let isLeadStrengthValid;
+			switch (leadData['Strength']) {
+				case 'hot':
+					isLeadStrengthValid = true;
+					break;
+				case 'cold':
+					isLeadStrengthValid = true;
+					break;
+				case 'warm':
+					isLeadStrengthValid = true;
+					break;
+				default:
+					isLeadStrengthValid = false;
+					break;
+			}
+			if (isLeadStrengthValid === false) {
+				this.showErrorMessage(`Strength at row ${index + 2} is not valid, valid options are: hot, cold, warm`);
+				isValid = false;
+			}
+		});
+		return isValid;
+	}
+
+	validatePhoneNumber = leadsData => {
+		let isValid = true;
+		leadsData.forEach((leadData, index) => {
+			const isPhoneNumberValid = Boolean(leadData['Phone'].length <= 12);
+			if (isPhoneNumberValid === false) {
+				this.showErrorMessage(`Phone Number at row ${index + 2} is not valid, use only numbers`);
+				isValid = false;
+			}
+		});
+		return isValid;
+	}
+
+	validateRequiredFields = leadsData => {
+		let isValid = true;
+		leadsData.forEach((leadData, index) => {
+			if (Boolean(leadData['Name']) === false || Boolean(leadData['Phone']) === false) {
+				this.showErrorMessage(`Lead data at row ${index + 2} is missing some compulsary field(s)!`);
+				isValid = false;
+			}
+		});
+		return isValid;
 	}
 
 	render() {

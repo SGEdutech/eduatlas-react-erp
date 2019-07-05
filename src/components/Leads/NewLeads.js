@@ -74,6 +74,14 @@ class NewLeads extends Component {
 	initAddLead = async values => {
 		const { addLeads, match: { params: { listingId, listingType } } } = this.props;
 		const hideLoadingMessage = message.loading('Action in progress..', 0);
+
+		// add comment in array
+		if (values.comment) {
+			const commentObj = { message: values.comment };
+			delete values.comment;
+			values.comments = [commentObj];
+		}
+
 		try {
 			const { data: addedLead } = await axios.post(`${host}/${listingType}/${listingId}/lead`, values);
 			addLeads(addedLead);
@@ -178,9 +186,18 @@ class NewLeads extends Component {
 									hasFeedback={true}>
 									{getFieldDecorator('message', {
 										rules: [{
-											required: true, message: 'Message is required!'
+											required: true, message: 'Query is required!'
 										}]
 									})(
+										<TextArea rows={4} />
+									)}
+								</Form.Item>
+							</Col>
+							<Col {...modalColLayout}>
+								<Form.Item
+									label="Comment"
+									hasFeedback={true}>
+									{getFieldDecorator('comment')(
 										<TextArea rows={4} />
 									)}
 								</Form.Item>
@@ -216,6 +233,41 @@ class NewLeads extends Component {
 											<Option value="warm">Warm</Option>
 											<Option value="cold">Cold</Option>
 										</Select>
+									)}
+								</Form.Item>
+							</Col>
+							<Col {...modalColLayout}>
+								<Form.Item
+									label="Status"
+									hasFeedback={true}>
+									{getFieldDecorator('status', {
+										initialValue: 'active'
+									})(
+										<Select className="w-100">
+											<Option value="active">Active</Option>
+											<Option value="closed">Closed</Option>
+											<Option value="enrolled">Enrolled</Option>
+										</Select>
+									)}
+								</Form.Item>
+							</Col>
+							<Col {...modalColLayout}>
+								<Form.Item
+									label="Date"
+									hasFeedback={true}>
+									{getFieldDecorator('createdAt', {
+										initialValue: moment()
+									})(
+										<DatePicker format="DD/MM/YY" className="w-100" />
+									)}
+								</Form.Item>
+							</Col>
+							<Col {...modalColLayout}>
+								<Form.Item
+									label="Next Follow-Up Date"
+									hasFeedback={true}>
+									{getFieldDecorator('nextFollowUp')(
+										<DatePicker format="DD/MM/YY" className="w-100" />
 									)}
 								</Form.Item>
 							</Col>

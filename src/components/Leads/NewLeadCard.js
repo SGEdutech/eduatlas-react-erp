@@ -162,7 +162,7 @@ class NewLeadCard extends Component {
 					</Row>
 					<Row>
 						<Col span={8}><small>Date:</small> </Col>
-						<Col span={16}>
+						<Col className="one-line-ellipsis" span={16}>
 							<small>{moment(leadInfo.createdAt).format('LLL')}</small>
 						</Col>
 					</Row>

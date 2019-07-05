@@ -107,10 +107,10 @@ class Leads extends Component {
 								</Col>;
 							})}
 					</TabPane>
-					<TabPane tab={<>Excel Upload</>} key="4">
+					<TabPane tab={<>Upload Data</>} key="4">
 						<ExcelLeadUpload addLeads={this.addLeads} />
 					</TabPane>
-					<TabPane tab={<>Excel Download</>} key="5">
+					<TabPane tab={<>Reports</>} key="5">
 						<ExcelLeadDownload colLayout={colLayout} emptyJsx={emptyJsx} leads={listingInfo ? listingInfo.leads : []} />
 					</TabPane>
 				</Tabs>
