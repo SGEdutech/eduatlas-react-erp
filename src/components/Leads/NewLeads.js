@@ -95,7 +95,7 @@ class NewLeads extends Component {
 		}
 	}
 	render() {
-		const { colLayout, emptyJsx, form, updateLeads } = this.props;
+		const { colLayout, courses, emptyJsx, form, updateLeads } = this.props;
 		const { showRespondModal } = this.state;
 		const { getFieldDecorator } = form;
 		const newLeads = this.getFilteredLeads();
@@ -127,7 +127,7 @@ class NewLeads extends Component {
 					{newLeads.length === 0 ? emptyJsx :
 						newLeads.map(leadInfo => {
 							return <Col className="p-2" key={leadInfo._id} {...colLayout}>
-								<NewLeadCard leadInfo={leadInfo} updateLeads={updateLeads} />
+								<NewLeadCard courses={courses} leadInfo={leadInfo} updateLeads={updateLeads} />
 							</Col>;
 						})}
 				</Row>
@@ -199,6 +199,17 @@ class NewLeads extends Component {
 									hasFeedback={true}>
 									{getFieldDecorator('comment')(
 										<TextArea rows={4} />
+									)}
+								</Form.Item>
+							</Col>
+							<Col {...modalColLayout}>
+								<Form.Item
+									label="Course"
+									hasFeedback={true}>
+									{getFieldDecorator('courseId')(
+										<Select>
+											{courses.map(course => <Option key={course._id} value={course._id}>{course.code}</Option>)}
+										</Select>
 									)}
 								</Form.Item>
 							</Col>

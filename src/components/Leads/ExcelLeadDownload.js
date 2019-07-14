@@ -23,6 +23,7 @@ class ExcelLeadDownload extends Component {
 	state = {
 		fromDate: null,
 		fromFollowUpDate: null,
+		leadCourse: null,
 		leadSource: null,
 		leadStatus: null,
 		leadStrength: null,
@@ -34,7 +35,7 @@ class ExcelLeadDownload extends Component {
 	getFilteredLeads = () => {
 		let { leads } = this.props;
 		leads = JSON.parse(JSON.stringify(leads));
-		const { searchQuery, toDate, toFollowUpDate, leadSource, leadStatus, leadStrength } = this.state;
+		const { searchQuery, toDate, toFollowUpDate, leadCourse, leadSource, leadStatus, leadStrength } = this.state;
 		let { fromDate, fromFollowUpDate } = this.state;
 		if (searchQuery) {
 			const searchRegex = new RegExp(searchQuery, 'i');
@@ -61,9 +62,12 @@ class ExcelLeadDownload extends Component {
 
 		if (leadStatus) leads = leads.filter(lead => leadStatus === lead.status);
 
+		if (leadCourse) leads = leads.filter(lead => leadCourse === lead.courseId);
+
 		return leads;
 	}
 
+	handleLeadCourseChange = leadCourse => this.setState({ leadCourse });
 	handleFromDateChange = fromDate => this.setState({ fromDate });
 	handleFromFollowUpDateChange = fromFollowUpDate => this.setState({ fromFollowUpDate });
 	handleLeadSourceChange = leadSource => this.setState({ leadSource });
@@ -73,12 +77,16 @@ class ExcelLeadDownload extends Component {
 	handleToFollowUpDateChange = toFollowUpDate => this.setState({ toFollowUpDate });
 
 	unparseCsv = () => {
+		const { courses } = this.props;
 		let leads = JSON.parse(JSON.stringify(this.getFilteredLeads()));
 		leads = leads.map(leadInfo => {
-			delete leadInfo.comments;
-			delete leadInfo._id;
+			const courseInfo = courses.find(course => course._id === leadInfo.courseId);
+			leadInfo.course = courseInfo ? courseInfo.code : '';
 			leadInfo.createdAt = leadInfo.createdAt ? moment(leadInfo.createdAt).format('DD/MM/YY') : '';
 			leadInfo.nextFollowUp = leadInfo.nextFollowUp ? moment(leadInfo.nextFollowUp).format('DD/MM/YY') : '';
+			delete leadInfo.comments;
+			delete leadInfo._id;
+			delete leadInfo.courseId;
 			return leadInfo;
 		});
 		const csvFile = unparse(leads);
@@ -90,7 +98,7 @@ class ExcelLeadDownload extends Component {
 	}
 
 	render() {
-		const { colLayout, emptyJsx } = this.props;
+		const { colLayout, courses, emptyJsx } = this.props;
 		const leads = this.getFilteredLeads();
 		return (
 			<>
@@ -118,6 +126,14 @@ class ExcelLeadDownload extends Component {
 							<Option value="hot">Hot</Option>
 							<Option value="warm">Warm</Option>
 							<Option value="cold">Cold</Option>
+						</Select>
+					</Col>
+					<Col span={24} className="p-1">
+						<Select className="w-100" onChange={this.handleLeadCourseChange} placeholder="Course" allowClear>
+							<Option value="disabled" disabled>
+								Course
+      						</Option>
+							{courses && courses.map(course => <Option key={course._id} value={course._id}>{course.code}</Option>)}
 						</Select>
 					</Col>
 					<Col span={24} className="p-1">
@@ -160,7 +176,7 @@ class ExcelLeadDownload extends Component {
 					{leads.length === 0 ? emptyJsx :
 						leads.map(leadInfo => {
 							return <Col className="p-2" key={leadInfo._id} {...colLayout}>
-								<NewLeadCard leadInfo={leadInfo} />
+								<NewLeadCard courses={courses} leadInfo={leadInfo} />
 							</Col>;
 						})}
 				</Row>

@@ -130,7 +130,7 @@ class NewLeadCard extends Component {
 	}
 
 	render() {
-		const { leadInfo, form } = this.props;
+		const { courses, leadInfo, form } = this.props;
 		const { getFieldDecorator } = form;
 		const { showRespondModal } = this.state;
 		return (
@@ -234,6 +234,19 @@ class NewLeadCard extends Component {
 										initialValue: leadInfo.nextFollowUp ? moment(leadInfo.nextFollowUp) : undefined
 									})(
 										<DatePicker className="w-100" format='LLL' showTime use12Hours />
+									)}
+								</Form.Item>
+							</Col>
+							<Col {...colLayout}>
+								<Form.Item
+									label="Course"
+									hasFeedback={true}>
+									{getFieldDecorator('courseId', {
+										initialValue: leadInfo.courseId
+									})(
+										<Select>
+											{courses.map(course => <Option key={course._id} value={course._id}>{course.code}</Option>)}
+										</Select>
 									)}
 								</Form.Item>
 							</Col>

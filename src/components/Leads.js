@@ -71,6 +71,7 @@ class Leads extends Component {
 
 	render() {
 		const { listingInfo } = this.state;
+		const courses = listingInfo ? listingInfo.courses : [];
 
 		const newLeads = [];
 		const followUpLeads = [];
@@ -89,21 +90,20 @@ class Leads extends Component {
 		const emptyJsx = <Empty className="mt-4"
 			image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
 			description={<span>Nothing is better than something...</span>}></Empty>;
-
 		return (
 			<div className="container">
 				<Tabs className="border p-2 mb-5" tabPosition={this.state.tabPosition}>
 					<TabPane tab={<>New Leads<Badge className="ml-1" count={newLeads.length} style={badgeColor}></Badge></>} key="1">
-						<NewLeads addLeads={this.addLeads} colLayout={colLayout} emptyJsx={emptyJsx} newLeads={newLeads} updateLeads={this.updateLeads} />
+						<NewLeads addLeads={this.addLeads} colLayout={colLayout} courses={courses} emptyJsx={emptyJsx} newLeads={newLeads} updateLeads={this.updateLeads} />
 					</TabPane>
 					<TabPane tab={<>Follow Ups<Badge className="ml-1" count={followUpLeads.length} style={badgeColor}></Badge></>} key="2">
-						<FollowUpLeads colLayout={colLayout} emptyJsx={emptyJsx} followUpLeads={followUpLeads} updateLeads={this.updateLeads} />
+						<FollowUpLeads colLayout={colLayout} courses={courses} emptyJsx={emptyJsx} followUpLeads={followUpLeads} updateLeads={this.updateLeads} />
 					</TabPane>
 					<TabPane tab={<>Closed<Badge className="ml-1" count={closedLeads.length} style={badgeColor}></Badge></>} key="3">
 						{closedLeads.length === 0 ? emptyJsx :
 							closedLeads.map(leadInfo => {
 								return <Col className="p-2" key={leadInfo._id} {...colLayout}>
-									<NewLeadCard leadInfo={leadInfo} updateLeads={this.updateLeads} />
+									<NewLeadCard courses={courses} leadInfo={leadInfo} updateLeads={this.updateLeads} />
 								</Col>;
 							})}
 					</TabPane>
@@ -111,7 +111,7 @@ class Leads extends Component {
 						<ExcelLeadUpload addLeads={this.addLeads} />
 					</TabPane>
 					<TabPane tab={<>Reports</>} key="5">
-						<ExcelLeadDownload colLayout={colLayout} emptyJsx={emptyJsx} leads={listingInfo ? listingInfo.leads : []} />
+						<ExcelLeadDownload colLayout={colLayout} courses={courses} emptyJsx={emptyJsx} leads={listingInfo ? listingInfo.leads : []} />
 					</TabPane>
 				</Tabs>
 			</div>
