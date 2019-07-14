@@ -131,6 +131,7 @@ class NewLeadCard extends Component {
 
 	render() {
 		const { courses, leadInfo, form } = this.props;
+		const courseInfo = courses.find(course => course._id === leadInfo.courseId);
 		const { getFieldDecorator } = form;
 		const { showRespondModal } = this.state;
 		return (
@@ -155,9 +156,9 @@ class NewLeadCard extends Component {
 						</Col>
 					</Row>
 					<Row className="text-secondary">
-						<Col span={8}><small>Product:</small> </Col>
+						<Col span={8}><small>Course:</small> </Col>
 						<Col className="one-line-ellipsis" span={16}>
-							{<small>{leadInfo.email}</small>}
+							{<small>{courseInfo ? courseInfo.code : undefined}</small>}
 						</Col>
 					</Row>
 					<Row>
