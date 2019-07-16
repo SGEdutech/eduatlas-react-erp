@@ -123,11 +123,13 @@ class AddOrEditTuition extends Component {
 	}
 
 	initEditTuition = async () => {
-		const { formStepsData } = this.state;
+		const { tuitionInfo } = this.state;
+		console.log(tuitionInfo)
+		const formData = convertModelToFormData(tuitionInfo);
 		const { history: { push }, match: { params: { tuitionId } } } = this.props;
 		const hideLoadingMessage = message.loading('Action in progress..', 0);
 		try {
-			const { data: tuitionInfo } = await axios.put(`${host}/tuition/${tuitionId}`, formStepsData);
+			const { data: tuitionInfo } = await axios.put(`${host}/tuition/${tuitionId}`, formData);
 			this.setState({ tuitionInfo });
 			hideLoadingMessage();
 			message.success('Tuition edited successfully!');
@@ -160,7 +162,7 @@ class AddOrEditTuition extends Component {
 
 	next() {
 		// Store data in state
-		const { form } = this.props;
+		const { edit, form } = this.props;
 		let isError = false;
 		form.validateFieldsAndScroll(async (err, values) => {
 			if (err) {
@@ -169,9 +171,15 @@ class AddOrEditTuition extends Component {
 				return err;
 			}
 			sanatizeFormObj(values);
-			this.setState(previousState => ({
-				formStepsData: { ...previousState.formStepsData, ...values }
-			}));
+			if (edit) {
+				this.setState(previousState => ({
+					tuitionInfo: { ...previousState.tuitionInfo, ...values }
+				}));
+			} else {
+				this.setState(previousState => ({
+					formStepsData: { ...previousState.formStepsData, ...values }
+				}));
+			}
 		});
 		if (isError) return;
 		// load next step
